@@ -1,0 +1,32 @@
+[submodule "chisel/rocket-chip"]
+	path = chisel/rocket-chip
+	url = https://github.com/mballance/rocket-chip.git
+	branch = master
+[submodule "simscripts"]
+	path = simscripts
+	url = https://github.com/mballance/simscripts.git
+	branch = master
+[submodule "chiselscripts"]
+	path = chiselscripts
+	url = https://github.com/mballance/chiselscripts.git
+	branch = master
+[submodule "utils/dtc"]
+	path = utils/dtc
+	url = https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+	branch = master
+[submodule "subprojects/chisellib"]
+	path = subprojects/chisellib
+	url = https://github.com/mballance/chisellib.git
+	branch = master
+[submodule "subprojects/std_protocol_if"]
+	path = subprojects/std_protocol_if
+	url = https://github.com/mballance/std_protocol_if.git
+	branch = master
+[submodule "subprojects/amba_sys_ip"]
+	path = subprojects/amba_sys_ip
+	url = https://github.com/mballance/amba_sys_ip.git
+	branch = master
+[submodule "subprojects/memory_primitives"]
+	path = subprojects/memory_primitives
+	url = https://github.com/mballance/memory_primitives.git
+	branch = master

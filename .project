@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>rocket_soc</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.scala-ide.sdt.core.scalabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>net.sf.sveditor.core.SVProjectBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.scala-ide.sdt.core.scalanature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>net.sf.sveditor.core.SVNature</nature>
+	</natures>
+	<variableList>
+		<variable>
+			<name>AMBA_SYS_IP</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/amba_sys_ip</value>
+		</variable>
+		<variable>
+			<name>MEMORY_PRIMITIVES</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/memory_primitives</value>
+		</variable>
+		<variable>
+			<name>ROCKET_SOC</name>
+			<value>$%7BPROJECT_LOC%7D</value>
+		</variable>
+		<variable>
+			<name>STD_PROTOCOL_IF</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/std_protocol_if</value>
+		</variable>
+	</variableList>
+</projectDescription>
