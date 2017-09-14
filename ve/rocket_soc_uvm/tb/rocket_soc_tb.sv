@@ -36,7 +36,7 @@ module rocket_soc_tb;
 			@(posedge clk);
 		end
 		
-		repeat (100) begin
+		repeat (1000) begin
 			@(posedge clk);
 		end
 		
@@ -69,13 +69,13 @@ module rocket_soc_tb;
 		) l2 (
 		);
 	
-	assign mem.AWREADY = 1;
-	assign mem.WREADY = 1;
-	assign mem.BVALID = 0;
-	assign mem.ARREADY = 1;
-	assign mem.RVALID = 0;
-	assign mem.RDATA = 0;
-	assign mem.RRESP = 0;
+//	assign mem.AWREADY = 1;
+//	assign mem.WREADY = 1;
+//	assign mem.BVALID = 0;
+//	assign mem.ARREADY = 1;
+//	assign mem.RVALID = 0;
+//	assign mem.RDATA = 0;
+//	assign mem.RRESP = 0;
 	
 //	assign mmio.AWREADY = 1;
 //	assign mmio.WREADY = 1;
@@ -88,6 +88,10 @@ module rocket_soc_tb;
 	wire[9:0] mmio_AWADDR, mmio_ARADDR;
 	assign mmio.AWADDR = mmio_AWADDR;
 	assign mmio.ARADDR = mmio_ARADDR;
+	
+	wire[9:0] mem_AWADDR, mem_ARADDR;
+	assign mem.AWADDR = mem_AWADDR;
+	assign mem.ARADDR = mem_ARADDR;
 	
 	assign l2.AWVALID = 0;
 	assign l2.WVALID = 0;
@@ -122,7 +126,7 @@ module rocket_soc_tb;
 		.mem_axi4_0_aw_ready                   (mem.AWREADY                  ), 
 		.mem_axi4_0_aw_valid                   (mem.AWVALID                  ), 
 		.mem_axi4_0_aw_bits_id                 (mem.AWID                ), 
-		.mem_axi4_0_aw_bits_addr               (mem.AWADDR              ), 
+		.mem_axi4_0_aw_bits_addr               (mem_AWADDR              ), 
 		.mem_axi4_0_aw_bits_len                (mem.AWLEN               ), 
 		.mem_axi4_0_aw_bits_size               (mem.AWSIZE              ), 
 		.mem_axi4_0_aw_bits_burst              (mem.AWBURST             ), 
@@ -142,7 +146,7 @@ module rocket_soc_tb;
 		.mem_axi4_0_ar_ready                   (mem.ARREADY                  ), 
 		.mem_axi4_0_ar_valid                   (mem.ARVALID                  ), 
 		.mem_axi4_0_ar_bits_id                 (mem.ARID                ), 
-		.mem_axi4_0_ar_bits_addr               (mem.ARADDR              ), 
+		.mem_axi4_0_ar_bits_addr               (mem_ARADDR              ), 
 		.mem_axi4_0_ar_bits_len                (mem.ARLEN               ), 
 		.mem_axi4_0_ar_bits_size               (mem.ARSIZE              ), 
 		.mem_axi4_0_ar_bits_burst              (mem.ARBURST             ), 
@@ -253,6 +257,16 @@ module rocket_soc_tb;
 		.ACLK               (clk              ), 
 		.ARESETn            (!rst             ), 
 		.s                  (mmio.slave       ));
+	
+	axi4_sram #(
+		.MEM_ADDR_BITS      (10     ), 
+		.AXI_ADDRESS_WIDTH  (AXI4_ADDRESS_WIDTH ), 
+		.AXI_DATA_WIDTH     (AXI4_DATA_WIDTH    ), 
+		.AXI_ID_WIDTH       (AXI4_ID_WIDTH      )
+		) u_mem (
+		.ACLK               (clk              ), 
+		.ARESETn            (!rst             ), 
+		.s                  (mem.slave        ));
 	
 	initial begin
 		run_test();
