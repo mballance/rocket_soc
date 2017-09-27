@@ -30,3 +30,19 @@
 	path = subprojects/memory_primitives
 	url = https://github.com/mballance/memory_primitives.git
 	branch = master
+[submodule "subprojects/wb_sys_ip"]
+	path = subprojects/wb_sys_ip
+	url = https://github.com/mballance/wb_sys_ip.git
+	branch = master
+[submodule "synthscripts"]
+	path = synthscripts
+	url = https://github.com/mballance/synthscripts.git
+	branch = master
+[submodule "subprojects/oc_wb_ip"]
+	path = subprojects/oc_wb_ip
+	url = https://github.com/mballance/oc_wb_ip.git
+	branch = master
+[submodule "ve/sv_bfms"]
+	path = ve/sv_bfms
+	url = https://github.com/mballance/sv_bfms.git
+	branch = master
