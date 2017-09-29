@@ -25,17 +25,23 @@ class RocketSocCore(
       DATA_WIDTH = 64,
       ID_WIDTH = 5)
   
-  val io = IO(new Bundle {
-    val mmio = new AXI4(mmio_p)
-    val mem = new AXI4(mem_p)
-    
-  })
- 
+  val l2_frontend_p = new AXI4.Parameters(
+      ADDR_WIDTH = 32,
+      DATA_WIDTH = 64,
+      ID_WIDTH = 5)
+  
   val core_cfg = new Config(
       new WithNBigCores(N_BIG_CORES) ++
       new WithBootROMFile(romfile) ++
       new BaseConfig);
   implicit val p = Parameters.root(core_cfg.toInstance)
+  
+  val io = IO(new Bundle {
+    val mmio = new AXI4(mmio_p)
+    val mem = new AXI4(mem_p)
+    val l2_frontend_bus = Flipped(new AXI4(l2_frontend_p))
+    val debug = new DebugIOIf()
+  })
   
   val rocket_core_lm = LazyModule(new ExampleRocketTop())
   val rocket_core = Module(rocket_core_lm.module)
@@ -54,6 +60,13 @@ class RocketSocCore(
     userBits = 0
   )
   
+  val l2_frontend_axi4_p = new AXI4BundleParameters(
+    addrBits = 32,
+    dataBits = 64,
+    idBits = 5,
+    userBits = 0
+  )
+  
   val mmio_axi4_converter = Module(new RocketAxi4Master2Axi4Master(mmio_axi4_p, mmio_p))
   mmio_axi4_converter.io.rocket_axi4 <> rocket_core.mmio_axi4.getElements(0)
   mmio_axi4_converter.io.axi4 <> io.mmio
@@ -61,14 +74,13 @@ class RocketSocCore(
   val mem_axi4_converter = Module(new RocketAxi4Master2Axi4Master(mem_axi4_p, mem_p))
   mem_axi4_converter.io.rocket_axi4 <> rocket_core.mem_axi4.getElements(0)
   mem_axi4_converter.io.axi4 <> io.mem
+  
+  val l2_frontend_axi4_converter = Module(new Axi4Target2RocketAxi4Target(
+      l2_frontend_axi4_p, l2_frontend_p))
+  rocket_core.l2_frontend_bus_axi4.getElements(0) <> l2_frontend_axi4_converter.io.rocket_axi4
+  io.l2_frontend_bus <> l2_frontend_axi4_converter.io.axi4
 
-  // Tie off the debug interface
-  rocket_core.debug.clockeddmi.get.dmiClock := clock
-  rocket_core.debug.clockeddmi.get.dmiReset := reset
-  rocket_core.debug.clockeddmi.get.dmi.req.valid := Bool(false)
-  rocket_core.debug.clockeddmi.get.dmi.req.bits.addr := 0.asUInt()
-  rocket_core.debug.clockeddmi.get.dmi.req.bits.data := 0.asUInt()
-  rocket_core.debug.clockeddmi.get.dmi.req.bits.op := 0.asUInt()
-  rocket_core.debug.clockeddmi.get.dmi.resp.ready := Bool(false)
+  // Route the debug interface out
+  io.debug <> rocket_core.debug
   
 }

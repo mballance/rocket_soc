@@ -79,6 +79,11 @@ SECTIONS
         _bss_end = .;
     } >ram
 
+	.heap ALIGN(0x10): {
+		. = ALIGN(0x4);
+		_boot_heap_base = .; PROVIDE(boot_heap_base = .);
+	} > ram
+
 /*
     . = ROM_BASE;
     . = ROM_BASE + 0x40;

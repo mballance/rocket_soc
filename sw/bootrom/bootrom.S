@@ -1,4 +1,5 @@
 #define DRAM_BASE 0x80000000
+#define APP_ENTRY 0x80001000
 #define MMIO_BASE 0x60000000
 
 .section .text.start, "ax", @progbits
@@ -14,11 +15,19 @@ _start:
  */
 .option pop
 
+  li a0, APP_ENTRY
+  jr a0
+
   li a0, MMIO_BASE
   li a1, 0
+  li a2, DRAM_BASE
 1:
+  lw a1, 0(a2)
   sw a1, 0(a0)
+//  lw a3, 0(a2)
+//  lw a1, 0(a0)
   add a1, a1, 1
+  add a2, a2, 4
   j 1b
 
   # Clear the bss segment

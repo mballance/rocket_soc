@@ -11,10 +11,6 @@ import chisellib.Plusargs
 import diplomacy.LazyMultiIOModuleImp
 import uncore.devices.TLROM
 
-class WithoutExtIn extends Config((site, here, up) => {
-  case ExtIn => Nil
-})
-
 // class MyConfig extends Config(new WithNBigCores(4) ++ new BaseConfig ++ new WithBootROMFile("foo"))
 class MyConfig(val romfile : String) extends Config(
 //    new WithNBigCores(4) ++ 

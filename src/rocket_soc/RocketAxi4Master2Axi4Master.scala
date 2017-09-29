@@ -7,7 +7,7 @@ import std_protocol_if._
 class RocketAxi4Master2Axi4Master(
     val rocket_axi4_p : AXI4BundleParameters,
     val axi4_p : AXI4.Parameters
-    )extends Module {
+    ) extends Module {
   
   require(rocket_axi4_p.addrBits == axi4_p.ADDR_WIDTH)
   require(rocket_axi4_p.dataBits == axi4_p.DATA_WIDTH)

@@ -27,8 +27,16 @@
 			<value>$%7BPROJECT_LOC%7D/subprojects/amba_sys_ip</value>
 		</variable>
 		<variable>
+			<name>BUILD_DIR_A</name>
+			<value>$%7BRUNDIR%7D/rocket_soc_uvm/qs</value>
+		</variable>
+		<variable>
 			<name>MEMORY_PRIMITIVES</name>
 			<value>$%7BPROJECT_LOC%7D/subprojects/memory_primitives</value>
+		</variable>
+		<variable>
+			<name>OC_WB_IP</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/oc_wb_ip</value>
 		</variable>
 		<variable>
 			<name>ROCKET_SOC</name>
@@ -37,6 +45,14 @@
 		<variable>
 			<name>STD_PROTOCOL_IF</name>
 			<value>$%7BPROJECT_LOC%7D/subprojects/std_protocol_if</value>
+		</variable>
+		<variable>
+			<name>SV_BFMS</name>
+			<value>$%7BPROJECT_LOC%7D/ve/sv_bfms</value>
+		</variable>
+		<variable>
+			<name>WB_SYS_IP</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/wb_sys_ip</value>
 		</variable>
 	</variableList>
 </projectDescription>
