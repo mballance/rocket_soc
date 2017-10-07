@@ -23,19 +23,20 @@ class RocketSocCore(
   val mem_p = new AXI4.Parameters(
       ADDR_WIDTH = 32,
       DATA_WIDTH = 64,
-      ID_WIDTH = 5)
+      ID_WIDTH = 4)
   
   val l2_frontend_p = new AXI4.Parameters(
       ADDR_WIDTH = 32,
       DATA_WIDTH = 64,
-      ID_WIDTH = 5)
+      ID_WIDTH = 8)
   
   val core_cfg = new Config(
       new WithNBigCores(N_BIG_CORES) ++
       new WithBootROMFile(romfile) ++
       new BaseConfig);
   implicit val p = Parameters.root(core_cfg.toInstance)
-  
+ 
+  // TODO: route interrupts out
   val io = IO(new Bundle {
     val mmio = new AXI4(mmio_p)
     val mem = new AXI4(mem_p)
@@ -45,6 +46,8 @@ class RocketSocCore(
   
   val rocket_core_lm = LazyModule(new ExampleRocketTop())
   val rocket_core = Module(rocket_core_lm.module)
+ 
+  rocket_core.interrupts := 0.asUInt();
  
   val mmio_axi4_p = new AXI4BundleParameters(
     addrBits = 31,
@@ -56,14 +59,14 @@ class RocketSocCore(
   val mem_axi4_p = new AXI4BundleParameters(
     addrBits = 32,
     dataBits = 64,
-    idBits = 5,
+    idBits = 4,
     userBits = 0
   )
   
   val l2_frontend_axi4_p = new AXI4BundleParameters(
     addrBits = 32,
     dataBits = 64,
-    idBits = 5,
+    idBits = 8,
     userBits = 0
   )
   

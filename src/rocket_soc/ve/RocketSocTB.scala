@@ -3,7 +3,7 @@ package rocket_soc.ve
 import chisel3._
 import rocket_soc.RocketSoc
 import std_protocol_if.AXI4
-import sv_bfms.UartSerialBFM
+import sv_bfms.uart.UartSerialBFM
 
 class RocketSocTB(val soc_p : RocketSoc.Parameters) extends Module {
  

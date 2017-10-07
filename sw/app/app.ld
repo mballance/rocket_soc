@@ -10,6 +10,7 @@ SECTIONS
 	.text : {
 		CREATE_OBJECT_SYMBOLS
 		. += 0x1000; /* Reserve space for the ROM runtime */
+		*(.app_crt0)
         *(.text .text.* .gnu.linkonce.t.*)
         *(.plt)
         *(.gnu.warning)

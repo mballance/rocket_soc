@@ -7,6 +7,7 @@ import firrtl._
 import chisel3.internal.firrtl.Emitter
 import chisel3.internal.firrtl.Emitter
 import rocket_soc.RocketSoc
+import chisel3.ChiselExecutionSuccess
 
 object RocketSocTBGen extends App {
   val plusargs = new Plusargs(args)
@@ -30,5 +31,15 @@ object RocketSocTBGen extends App {
           romfile = romfile
           )
       )
-  )
+  ) match {
+    case ChiselExecutionSuccess(Some(circuit), emitted, _) => 
+      val annos = circuit.annotations
+      
+      println("There are: " + annos.length + " annotations")
+      
+      for (a <- annos) {
+        println("Annotation: " + a.toString())
+      }
+      
+  }
 }
