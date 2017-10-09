@@ -1,7 +1,3 @@
-[submodule "chisel/rocket-chip"]
-	path = chisel/rocket-chip
-	url = https://github.com/mballance/rocket-chip.git
-	branch = master
 [submodule "simscripts"]
 	path = simscripts
 	url = https://github.com/mballance/simscripts.git
