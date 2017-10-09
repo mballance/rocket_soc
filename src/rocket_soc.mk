@@ -1,13 +1,16 @@
 
 ROCKET_SOC_SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-ROCKET_CHIP_DIR := $(ROCKET_SOC_SRC_DIR)/../chisel/rocket-chip
+ROCKET_CHIP_DIR := $(ROCKET_SOC_SRC_DIR)/../subprojects/rocket-chip
 
 ifneq (1,$(RULES))
 
 ROCKET_CHIP_LIB := rocket_chip.jar
 HARDFLOAT_LIB := hardfloat.jar
 HARDFLOAT_SRC := $(shell find $(ROCKET_CHIP_DIR)/hardfloat/src -name '*.scala')
-ROCKET_CHIP_SRC := $(shell find $(ROCKET_CHIP_DIR)/src -name '*.scala')
+ROCKET_CHIP_SRC := \
+	$(shell find $(ROCKET_CHIP_DIR)/src -name '*.scala') \
+	$(wildcard $(ROCKET_CHIP_DIR)/macros/src/main/scala/*.scala)
+	
 ROCKET_SOC_LIB := rocket_soc.jar
 ROCKET_SOC_SRC := \
 	$(wildcard $(ROCKET_SOC_SRC_DIR)/rocket_soc/*.scala) \
@@ -41,8 +44,8 @@ $(ROCKET_SOC_GEN_SRC) : $(ROCKET_SOC_LIBS)
 #	$(Q)$(CHISELG) $(foreach l,$(ROCKET_SOC_LIBS),-L$(l)) \
 #		rocket_soc.RocketSocGen +BOOTROM_DIR=$(BUILD_DIR_A)
 		
-$(ROCKET_SOC_GEN_TB_SRC) : $(ROCKET_SOC_TB_LIBS) 
-	$(Q)$(DO_CHISELG) rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
+$(ROCKET_SOC_GEN_TB_SRC) : $(ROCKET_SOC_TB_LIBS) $(DTC_BUILD)
+	$(Q)export PATH=./dtc:$(PATH) ; $(DO_CHISELG) rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
 #	$(Q)$(CHISELG) $(foreach l,$(ROCKET_SOC_TB_LIBS),-L$(l)) \
 #		rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
 

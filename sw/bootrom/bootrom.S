@@ -14,6 +14,10 @@ _start:
   addi  gp, gp, %pcrel_lo(1b)
  */
 .option pop
+1:
+  li a0, 1
+  add a0, a0, 1
+  j 1b
 
   li a0, APP_ENTRY
   jr a0

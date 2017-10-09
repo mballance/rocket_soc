@@ -6,6 +6,7 @@ include $(WB_SYS_IP)/src/wb_sys_ip.mk
 include $(OC_WB_IP)/src/oc_wb_ip.mk
 include $(AMBA_SYS_IP)/src/amba_sys_ip.mk
 include $(ROCKET_SOC)/chiselscripts/mkfiles/chiselscripts.mk
+include $(ROCKET_SOC)/utils/utils.mk
 include $(ROCKET_SOC)/ve/sv_bfms/src/sv_bfms.mk
 
 ifneq (1,$(RULES))

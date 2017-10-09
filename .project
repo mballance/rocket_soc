@@ -21,6 +21,13 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sf.sveditor.core.SVNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>subprojects/rocket-chip/eclipse_src/freechips/rocketchip/macros</name>
+			<type>2</type>
+			<locationURI>PARENT-3-PARENT_LOC/macros/src/main/scala</locationURI>
+		</link>
+	</linkedResources>
 	<variableList>
 		<variable>
 			<name>AMBA_SYS_IP</name>

@@ -42,3 +42,7 @@
 	path = ve/sv_bfms
 	url = https://github.com/mballance/sv_bfms.git
 	branch = master
+[submodule "subprojects/rocket-chip"]
+	path = subprojects/rocket-chip
+	url = https://github.com/mballance/rocket-chip.git
+	branch = master

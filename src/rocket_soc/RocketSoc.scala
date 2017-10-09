@@ -25,7 +25,7 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
     val uart0 = new UartIf
   });
  
-  val u_core = Module(new RocketSocCore(2, soc_p.romfile))
+  val u_core = Module(new RocketSocCore(1, soc_p.romfile))
  
   // We're not using the debug interface
   u_core.io.debug.tieoff_flipped(u_core.clock, u_core.reset)
@@ -43,6 +43,7 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
       MEM_ADDR_BITS = 12,
       u_core.mmio_p)))
   mmio_sram.io.s <> u_core.io.mmio
+//  u_core.io.mmio.tieoff()
       
 //  val mmio_axi4_wb_bridge = Module(new Axi4WishboneBridge(
 //      u_core.mmio_p, 
@@ -70,7 +71,6 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
 //  u_uart.io.t <> periph_ic.io.s(0)
 //  io.uart0 <> u_uart.io.s
   
-//  u_core.io.mmio.tieoff()
   
 }
 

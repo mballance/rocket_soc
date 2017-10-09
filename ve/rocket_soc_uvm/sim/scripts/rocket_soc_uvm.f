@@ -4,10 +4,10 @@
 
 -f ${STD_PROTOCOL_IF}/rtl/axi4/axi4.f
 
-${ROCKET_SOC}/chisel/rocket-chip/vsrc/plusarg_reader.v
-${ROCKET_SOC}/chisel/rocket-chip/vsrc/AsyncResetReg.v
-${ROCKET_SOC}/chisel/rocket-chip/vsrc/ClockDivider2.v
-${ROCKET_SOC}/chisel/rocket-chip/vsrc/ClockDivider3.v
+${ROCKET_SOC}/subprojects/rocket-chip/vsrc/plusarg_reader.v
+${ROCKET_SOC}/subprojects/rocket-chip/vsrc/AsyncResetReg.v
+${ROCKET_SOC}/subprojects/rocket-chip/vsrc/ClockDivider2.v
+${ROCKET_SOC}/subprojects/rocket-chip/vsrc/ClockDivider3.v
 
 ${BUILD_DIR_A}/RocketSocTB.v
 

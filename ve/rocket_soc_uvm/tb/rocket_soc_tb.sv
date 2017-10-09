@@ -14,7 +14,8 @@ module rocket_soc_tb;
 	
 	reg clk = 0;
 	reg reset = 1;
-	reg[7:0] reset_cnt = 0;
+	reg[15:0] reset_cnt = 0;
+	reg[15:0] reset_point = 1000;
 	
 	initial begin
 		forever begin
@@ -24,7 +25,7 @@ module rocket_soc_tb;
 	end
 	
 	always @(posedge clk) begin
-		if (reset_cnt == 100) begin
+		if (reset_cnt == reset_point) begin
 			reset <= 0;
 		end else begin
 			reset_cnt <= reset_cnt + 1;
