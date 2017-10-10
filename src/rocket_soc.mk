@@ -6,17 +6,17 @@ ifneq (1,$(RULES))
 
 ROCKET_CHIP_LIB := rocket_chip.jar
 HARDFLOAT_LIB := hardfloat.jar
-HARDFLOAT_SRC := $(shell find $(ROCKET_CHIP_DIR)/hardfloat/src -name '*.scala')
-ROCKET_CHIP_SRC := \
-	$(shell find $(ROCKET_CHIP_DIR)/src -name '*.scala') \
-	$(wildcard $(ROCKET_CHIP_DIR)/macros/src/main/scala/*.scala)
-	
+HARDFLOAT_SRC := $(wildcard $(ROCKET_CHIP_DIR)/hardfloat/src/main/scala/*.scala)
+ROCKET_CHIP_MACROS_SRC := $(wildcard $(ROCKET_CHIP_DIR)/macros/src/main/scala/*.scala)
+ROCKET_CHIP_SRC := $(shell find $(ROCKET_CHIP_DIR)/src -name '*.scala')
+
+ROCKET_CHIP_MACROS_JAR := rocket_chip_macros.jar
 ROCKET_SOC_LIB := rocket_soc.jar
 ROCKET_SOC_SRC := \
 	$(wildcard $(ROCKET_SOC_SRC_DIR)/rocket_soc/*.scala) \
 	$(wildcard $(ROCKET_SOC_SRC_DIR)/rocket_soc/ve/*.scala)
 
-ROCKET_CHIP_DEPS = $(HARDFLOAT_LIB) 
+ROCKET_CHIP_DEPS = $(HARDFLOAT_LIB) $(ROCKET_CHIP_MACROS_JAR)
 ROCKET_SOC_DEPS = $(ROCKET_CHIP_DEPS) $(ROCKET_CHIP_LIB) $(CHISELLIB_JAR) \
 	$(OC_WB_IP_LIB) $(AMBA_SYS_IP_LIB) $(WB_SYS_IP_LIB) $(STD_PROTOCOL_IF_LIB) \
 	$(SV_BFMS_JAR) 
@@ -30,6 +30,9 @@ else # Rules
 	
 $(HARDFLOAT_LIB) : $(HARDFLOAT_SRC)	
 	$(Q)$(CHISELC) -o $@ $(HARDFLOAT_SRC) -L$(HARDFLOAT_LIB)
+	
+$(ROCKET_CHIP_MACROS_JAR) : $(ROCKET_CHIP_MACROS_SRC)
+	$(Q)$(DO_CHISELC)
 	
 $(ROCKET_CHIP_LIB) : $(ROCKET_CHIP_SRC) $(ROCKET_CHIP_DEPS) 
 	$(Q)$(DO_CHISELC)

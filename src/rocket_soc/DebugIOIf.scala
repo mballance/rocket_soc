@@ -1,8 +1,7 @@
 package rocket_soc
 
-import rocketchip.DebugIO
-import config.Config
-import config.Parameters
+import freechips.rocketchip.devices.debug._
+import freechips.rocketchip.config._
 import chisel3._
 
 class DebugIOIf(implicit p : Parameters) extends DebugIO {

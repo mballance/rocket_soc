@@ -2,20 +2,15 @@ package rocket_soc
 
 import chisel3._
 import std_protocol_if._
+import chisellib._
 import wb_sys_ip._
 import oc_wb_ip.wb_uart.WishboneUART
-import rocketchip.ExampleRocketTop
-import config._
-import diplomacy.LazyModule
-import rocketchip._
-import rocketchip.ExampleRocketTop
-import coreplex.WithNBigCores
-import coreplex.WithBootROMFile
-import chisellib.Plusargs
-import diplomacy.LazyMultiIOModuleImp
-import uncore.devices.TLROM
-import uncore.axi4.AXI4BundleParameters
-import uncore.axi4.AXI4Bundle
+
+import freechips.rocketchip.config._
+import freechips.rocketchip.diplomacy._
+import freechips.rocketchip.coreplex._
+import freechips.rocketchip.amba.axi4._
+
 import amba_sys_ip.axi4.Axi4WishboneBridge
 import amba_sys_ip.axi4.Axi4Sram
 

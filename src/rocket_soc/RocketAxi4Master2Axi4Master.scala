@@ -1,7 +1,7 @@
 package rocket_soc
 
 import chisel3._
-import uncore.axi4._
+import freechips.rocketchip.amba.axi4._
 import std_protocol_if._
 
 class RocketAxi4Master2Axi4Master(

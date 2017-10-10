@@ -1,15 +1,14 @@
 package rocket_soc
 
 import chisel3._
-import config.Config
-import config.Parameters
-import coreplex.WithBootROMFile
-import coreplex.WithNBigCores
-import diplomacy.LazyModule
-import rocketchip.BaseConfig
-import rocketchip.ExampleRocketTop
 import std_protocol_if.AXI4
-import uncore.axi4.AXI4BundleParameters
+import freechips.rocketchip.amba.axi4.AXI4BundleParameters
+import freechips.rocketchip.system._
+import freechips.rocketchip.diplomacy.LazyModule
+import freechips.rocketchip.config.Parameters
+import freechips.rocketchip.coreplex.WithNBigCores
+import freechips.rocketchip.coreplex.WithBootROMFile
+import freechips.rocketchip.config.Config
 
 class RocketSocCore(
     val N_BIG_CORES : Int = 1,
@@ -44,7 +43,7 @@ class RocketSocCore(
     val debug = new DebugIOIf()
   })
   
-  val rocket_core_lm = LazyModule(new ExampleRocketTop())
+  val rocket_core_lm = LazyModule(new ExampleRocketSystem)
   val rocket_core = Module(rocket_core_lm.module)
  
   rocket_core.interrupts := 0.asUInt();
