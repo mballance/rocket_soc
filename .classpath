@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="subprojects/wb_sys_ip/ve/sv_bfms"/>
+	<classpathentry kind="src" path="subprojects/rocket-chip/hardfloat/src/main/scala"/>
 	<classpathentry kind="src" path="subprojects/rocket-chip/macros/src/main/scala"/>
 	<classpathentry kind="src" path="subprojects/rocket-chip/src/main/scala"/>
 	<classpathentry kind="src" path="subprojects/oc_wb_ip/src"/>
