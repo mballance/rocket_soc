@@ -6,8 +6,8 @@ ifneq (1,$(RULES))
 
 ROCKET_CHIP_LIB := rocket_chip.jar
 HARDFLOAT_LIB := hardfloat.jar
-HARDFLOAT_SRC := $(wildcard $(ROCKET_CHIP_DIR)/hardfloat/src/main/scala/*.scala)
-ROCKET_CHIP_MACROS_SRC := $(wildcard $(ROCKET_CHIP_DIR)/macros/src/main/scala/*.scala)
+HARDFLOAT_SRC := $(wildcard $(ROCKET_CHIP_DIR)/hardfloat/src/main/scala/hardfloat/*.scala)
+ROCKET_CHIP_MACROS_SRC := $(wildcard $(ROCKET_CHIP_DIR)/macros/src/main/scala/freechips/rocketchip/*.scala)
 ROCKET_CHIP_SRC := $(shell find $(ROCKET_CHIP_DIR)/src -name '*.scala')
 
 ROCKET_CHIP_MACROS_JAR := rocket_chip_macros.jar
@@ -29,7 +29,7 @@ ROCKET_SOC_GEN_TB_SRC := RocketSocTB.v
 else # Rules
 	
 $(HARDFLOAT_LIB) : $(HARDFLOAT_SRC)	
-	$(Q)$(CHISELC) -o $@ $(HARDFLOAT_SRC) -L$(HARDFLOAT_LIB)
+	$(Q)$(CHISELC) -o $@ $(HARDFLOAT_SRC)
 	
 $(ROCKET_CHIP_MACROS_JAR) : $(ROCKET_CHIP_MACROS_SRC)
 	$(Q)$(DO_CHISELC)

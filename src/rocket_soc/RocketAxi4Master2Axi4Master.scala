@@ -59,5 +59,6 @@ class RocketAxi4Master2Axi4Master(
   io.rocket_axi4.r.bits.resp := io.axi4.rresp.RRESP
   io.rocket_axi4.r.bits.data := io.axi4.rresp.RDATA
   io.rocket_axi4.r.valid := io.axi4.rresp.RVALID
+  io.rocket_axi4.r.bits.last := io.axi4.rresp.RLAST
   io.axi4.rready := io.rocket_axi4.r.ready
 }
