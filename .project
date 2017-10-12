@@ -10,32 +10,21 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>net.sf.sveditor.core.SVProjectBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.scala-ide.sdt.core.scalanature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>net.sf.sveditor.core.SVNature</nature>
 	</natures>
 	<linkedResources>
 		<link>
 			<name>subprojects/rocket-chip/esrc/hardfloat/hardfloat</name>
 			<type>2</type>
-			<locationURI>$%7BPROJECT_LOC%7D/subprojects/rocket-chip/hardfloat</locationURI>
+			<locationURI>$%7BPROJECT_LOC%7D/subprojects/rocket-chip/hardfloat/src/main/scala</locationURI>
 		</link>
 		<link>
 			<name>subprojects/rocket-chip/esrc/main/freechips/rocketchip</name>
 			<type>2</type>
 			<locationURI>$%7BPROJECT_LOC%7D/subprojects/rocket-chip/src/main/scala</locationURI>
-		</link>
-		<link>
-			<name>subprojects/rocket-chip/esrc/macros/freechips/rocketchip/macros</name>
-			<type>2</type>
-			<locationURI>$%7BPROJECT_LOC%7D/subprojects/rocket-chip/macros/src/main/scala</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
