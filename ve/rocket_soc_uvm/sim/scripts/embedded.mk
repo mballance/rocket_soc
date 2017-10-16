@@ -24,6 +24,7 @@ bootrom.build : bootrom/bootrom.img
 	
 app/%.elf : app/%.o $(SW_APP_CORE_LIB)
 	$(Q)echo "build app/$(*).elf from $^"
+#	$(Q)$(CC) -Wl,-T,$(SW_APP_DIR)/app.ld -o $@ $^
 	$(Q)$(LD) -T $(SW_APP_DIR)/app.ld -o $@ $^
 	
 include $(MK_INCLUDES)

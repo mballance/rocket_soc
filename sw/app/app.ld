@@ -72,5 +72,10 @@ SECTIONS
         . = ALIGN(4);
         _bss_end = .;
     } >ram
-
+   
+/*    .heap_stack ALIGN(0x10): { */
+    	PROVIDE(_heap_start = .);
+    	. = 0x80010000;
+    	PROVIDE(_stack_top = .);
+/*    } >ram */
 }

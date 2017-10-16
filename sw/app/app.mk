@@ -3,6 +3,11 @@ SW_APP_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 ifneq (1,$(RULES))
 
+LIBGCC:=$(shell $(CC) -print-libgcc-file-name -mcompat-delay)
+LIBC:=$(dir $(LIBGCC))/../../../../../or1k-elf/lib/compat-delay/libc.a
+LIBCXX:=$(dir $(LIBGCC))/../../../../../or1k-elf/lib/compat-delay/libstdc++.a
+LIBOR1K:=$(dir $(LIBGCC))/../../../../../or1k-elf/lib/compat-delay/libor1k.a
+
 SW_APP_CORE_LIB := app/app_crt0.o
 SRC_DIRS += $(SW_APP_DIR)
 

@@ -11,7 +11,7 @@ include $(ROCKET_SOC)/ve/sv_bfms/src/sv_bfms.mk
 
 ifneq (1,$(RULES))
 
-BUILD_PRECOMPILE_TARGETS += $(ROCKET_SOC_GEN_TB_SRC) bootrom.build
+BUILD_PRECOMPILE_TARGETS += $(ROCKET_SOC_GEN_TB_SRC) embedded_sw
 
 SW_IMAGES := $(call get_plusarg,SW_IMAGE,$(PLUSARGS))
 SW_IMAGE := $(firstword $(SW_IMAGES))
@@ -50,8 +50,10 @@ ram.hex :
 	echo "0000001600000015" >> $@
 endif
 
-bootrom.build :
+bootrom.build : embedded_sw
+
+embedded_sw :
 	echo "SW_IMAGES=$(SW_IMAGES)"
-	$(Q)$(MAKE) -f $(SIM_DIR)/scripts/embedded.mk bootrom.build $(SW_IMAGES)
+	$(Q)$(MAKE) VERBOSE=$(VERBOSE) -f $(SIM_DIR)/scripts/embedded.mk bootrom.build $(SW_IMAGES)
 
 endif
