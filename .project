@@ -6,6 +6,18 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.scala-ide.sdt.core.scalabuilder</name>
 			<arguments>
 			</arguments>
@@ -17,20 +29,53 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.scala-ide.sdt.core.scalanature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sf.sveditor.core.SVNature</nature>
 	</natures>
 	<linkedResources>
 		<link>
-			<name>subprojects/rocket-chip/esrc/hardfloat/hardfloat</name>
+			<name>rundir</name>
 			<type>2</type>
-			<locationURI>$%7BPROJECT_LOC%7D/subprojects/rocket-chip/hardfloat/src/main/scala</locationURI>
-		</link>
-		<link>
-			<name>subprojects/rocket-chip/esrc/main/freechips/rocketchip</name>
-			<type>2</type>
-			<locationURI>$%7BPROJECT_LOC%7D/subprojects/rocket-chip/src/main/scala</locationURI>
+			<locationURI>$%7BRUNDIR%7D</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>AMBA_SYS_IP</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/amba_sys_ip</value>
+		</variable>
+		<variable>
+			<name>MEMORY_PRIMITIVES</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/memory_primitives</value>
+		</variable>
+		<variable>
+			<name>OC_WB_IP</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/oc_wb_ip</value>
+		</variable>
+		<variable>
+			<name>ROCKET_SOC</name>
+			<value>$%7BPROJECT_LOC%7D</value>
+		</variable>
+		<variable>
+			<name>SIM</name>
+			<value>qs</value>
+		</variable>
+		<variable>
+			<name>STD_PROTOCOL_IF</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/std_protocol_if</value>
+		</variable>
+		<variable>
+			<name>SV_BFMS</name>
+			<value>$%7BPROJECT_LOC%7D/ve/sv_bfms</value>
+		</variable>
+		<variable>
+			<name>VMON</name>
+			<value>$%7BPROJECT_LOC%7D/subprojects/vmon</value>
+		</variable>
+	</variableList>
 </projectDescription>

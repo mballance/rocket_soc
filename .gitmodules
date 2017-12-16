@@ -46,3 +46,11 @@
 	path = subprojects/rocket-chip
 	url = https://github.com/mballance/rocket-chip.git
 	branch = master
+[submodule "subprojects/vmon"]
+	path = subprojects/vmon
+	url = https://github.com/mballance/vmon.git
+	branch = master
+[submodule "subprojects/uex"]
+	path = subprojects/uex
+	url = https://github.com/mballance/uex.git
+	branch = master

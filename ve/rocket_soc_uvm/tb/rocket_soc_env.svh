@@ -1,5 +1,5 @@
 
-class rocket_soc_env extends uvm_env;
+class rocket_soc_env extends RocketSocTBEnvBase;
 	`uvm_component_utils(rocket_soc_env)
 
 	function new(string name, uvm_component parent=null);

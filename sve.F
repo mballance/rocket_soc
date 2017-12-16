@@ -9,8 +9,9 @@ ${UVM_HOME}/src/uvm_pkg.sv
 -f ${MEMORY_PRIMITIVES}/rtl/sim/sim.f
 -F ${STD_PROTOCOL_IF}/sve.F
 -f ${AMBA_SYS_IP}/sve.f
+-F ${ROCKET_SOC}/ve/ve_sve.F
 -f ${ROCKET_SOC}/rtl/rocket_soc_rtl.f
+-F ${ROCKET_SOC}/subprojects/subprojects_sve.F
 
-./output/ExampleRocketTop.v
 
--F ./ve/rocket_soc_uvm/sve.F
+// ${RUNDIR}/rocket_soc_uvm/qs/

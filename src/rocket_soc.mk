@@ -29,7 +29,7 @@ ROCKET_SOC_GEN_TB_SRC := RocketSocTB.v
 else # Rules
 	
 $(HARDFLOAT_LIB) : $(HARDFLOAT_SRC)	
-	$(Q)$(CHISELC) -o $@ $(HARDFLOAT_SRC)
+	$(Q)$(DO_CHISELC)
 	
 $(ROCKET_CHIP_MACROS_JAR) : $(ROCKET_CHIP_MACROS_SRC)
 	$(Q)$(DO_CHISELC)
@@ -48,7 +48,7 @@ $(ROCKET_SOC_GEN_SRC) : $(ROCKET_SOC_LIBS)
 #		rocket_soc.RocketSocGen +BOOTROM_DIR=$(BUILD_DIR_A)
 		
 $(ROCKET_SOC_GEN_TB_SRC) : $(ROCKET_SOC_TB_LIBS) $(DTC_BUILD)
-	$(Q)export PATH=./dtc:$(PATH) ; $(DO_CHISELG) rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
+	$(Q)export PATH="./dtc:$(PATH)" ; $(DO_CHISELG) rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
 #	$(Q)$(CHISELG) $(foreach l,$(ROCKET_SOC_TB_LIBS),-L$(l)) \
 #		rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
 

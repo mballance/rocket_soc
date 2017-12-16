@@ -67,7 +67,8 @@ zero_loop:
 zero_loop_end:
 
 
-  call    __libc_init_array
+/*  jal x1, __libc_init_array */
+/*  call    __libc_init_array */
 
   /* jump to main program entry point (argc = argv = 0) */
   addi x10, x0, 0

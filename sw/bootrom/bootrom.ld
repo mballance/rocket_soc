@@ -2,7 +2,7 @@
 MEMORY
 {
 	rom(rx)	 : ORIGIN = 0x10000, LENGTH = 0x00010000
-	ram(rwx) : ORIGIN = 0x80000000, LENGTH = 0x00001000
+	ram(rwx) : ORIGIN = 0x52000000, LENGTH = 0x00001000
 }
 
 SECTIONS
@@ -83,6 +83,9 @@ SECTIONS
 		. = ALIGN(0x4);
 		_boot_heap_base = .; PROVIDE(boot_heap_base = .);
 	} > ram
+	
+	. = 0x52001000;
+	PROVIDE(_stack_top = .);
 
 /*
     . = ROM_BASE;
