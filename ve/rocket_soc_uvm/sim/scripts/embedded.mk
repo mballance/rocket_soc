@@ -36,4 +36,4 @@ app/%.elf : app/%.o $(SW_APP_CORE_LIB) # $(DEVTREE_OBJS)
 	
 include $(MK_INCLUDES)
 
-	
+

@@ -1,4 +1,6 @@
 
+ROCKET_SOC_UVM_SCRIPTS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
 include $(ROCKET_SOC)/src/rocket_soc.mk
 include $(STD_PROTOCOL_IF)/src/std_protocol_if.mk
 include $(CHISELLIB)/src/chisellib.mk
@@ -58,6 +60,7 @@ bootrom.build : embedded_sw
 
 embedded_sw :
 	echo "SW_IMAGES=$(SW_IMAGES)"
-	$(Q)$(MAKE) VERBOSE=$(VERBOSE) -f $(SIM_DIR)/scripts/embedded.mk bootrom.build $(SW_IMAGES)
+	$(Q)$(MAKE) VERBOSE=$(VERBOSE) \
+		-f $(ROCKET_SOC_UVM_SCRIPTS_DIR)/embedded.mk bootrom.build $(SW_IMAGES)
 
 endif

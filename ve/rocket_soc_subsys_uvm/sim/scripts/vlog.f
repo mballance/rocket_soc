@@ -12,6 +12,6 @@ ${ROCKET_SOC}/ve/rocket_soc_subsys_uvm/tb/rocket_soc_subsys_env_pkg.sv
 
 ${ROCKET_SOC}/ve/rocket_soc_subsys_uvm/tests/rocket_soc_subsys_tests_pkg.sv
 
-${ROCKET_SOC}/ve/rocket_soc_subsys_uvm/tb/SyncRocketTile.sv
+${ROCKET_SOC}/ve/rocket_soc_subsys_uvm/tb/Rocket.sv
 ${ROCKET_SOC}/ve/rocket_soc_subsys_uvm/tb/rocket_soc_subsys_tb.sv
 
