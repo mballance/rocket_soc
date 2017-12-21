@@ -9,6 +9,4 @@ package rocket_soc_tests_pkg;
 	
 	`include "rocket_soc_test_base.svh"
 	
-	
-	
 endpackage

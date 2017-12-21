@@ -51,6 +51,16 @@ _start:
   la x2, _stack_top
   add x2, x2, -8
 
+  li a0, DRAM_BASE
+  li a1, 0x55eeaa00
+
+1:
+	sw a1, 0(a0)
+	lw a2, 0(a0)
+	addi	a0, a0, 4
+	addi	a1, a1, 1
+	j	1b
+
   /* clear BSS */
   la x26, _bss_start
   la x27, _bss_end

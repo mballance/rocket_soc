@@ -172,6 +172,8 @@ module Rocket(
 		input         io_rocc_cmd_ready,
 		input         io_rocc_interrupt
 		);
+	import hella_cache_master_agent_pkg::*;
+	import uvm_pkg::*;
 	
 	// Stub out imem interface
 	assign io_imem_req_valid = 0;
@@ -243,7 +245,7 @@ module Rocket(
 	assign io_ptw_pmp_4_cfg_w= 0;
 	assign io_ptw_pmp_4_cfg_r= 0;
 	assign io_ptw_pmp_4_mask= 3;
-	assign io_ptw_pmp_5_addr = 'h39abfdf2;
+	assign io_ptw_pmp_5_addr = 'h391bfdf2;
 	assign io_ptw_pmp_5_cfg_l= 0;
 	assign io_ptw_pmp_5_cfg_a= 0;
 	assign io_ptw_pmp_5_cfg_x= 0;
@@ -290,19 +292,23 @@ module Rocket(
 	
 	parameter M_XRD = 'b00000;
 	parameter M_XWR = 'b00001;
-
+	
+`ifdef UNDEFINED
 	assign io_dmem_req_valid = (state == 0);
 	assign io_dmem_req_bits_addr = addr;
 	assign io_dmem_req_bits_tag = tag;
 	assign io_dmem_req_bits_cmd = 0; // M_XWR; // ??
 	assign io_dmem_req_bits_typ = 4; // MT_W; // ??
+`endif
 	assign io_dmem_req_bits_phys = 0; // ??
-	assign io_dmem_s1_kill = 0;
+//	assign io_dmem_s1_kill = io_dmem_s2_nack;
+`ifdef UNDEFINED	
 	assign io_dmem_s1_data_data = 5; //
 	assign io_dmem_s1_data_mask = 'h00;
+`endif
 	assign io_dmem_invalidate_lr = 0;
-	
 
+`ifdef UNDEFINED
 	always @(posedge clock or reset) begin
 		if (reset == 1) begin
 			state <= 0;
@@ -331,10 +337,48 @@ module Rocket(
 			endcase
 		end
 	end
-
+	parameter int NUM_ADDR_BITS = 40;
+	parameter int NUM_DATA_BITS = 64;
+	parameter int NUM_TAG_BITS = 7;
+	
+	hella_cache_master_bfm_core #(NUM_ADDR_BITS, NUM_DATA_BITS, NUM_TAG_BITS) core(clock, reset);
+`else // UNDEFINED
+	
+	parameter int NUM_ADDR_BITS = 40;
+	parameter int NUM_DATA_BITS = 64;
+	parameter int NUM_TAG_BITS = 7;
+	typedef hella_cache_master_config #(NUM_ADDR_BITS, NUM_DATA_BITS, NUM_TAG_BITS) cfg_t;
+	
+	hella_cache_master_bfm #(
+		.NUM_ADDR_BITS  (NUM_ADDR_BITS ), 
+		.NUM_DATA_BITS  (NUM_DATA_BITS ), 
+		.NUM_TAG_BITS   (NUM_TAG_BITS  )
+		) dmem_bfm (
+		.clock          (clock						), 
+		.reset          (reset						), 
+		.req_addr       (io_dmem_req_bits_addr		), 
+		.req_ready      (io_dmem_req_ready			), 
+		.req_valid      (io_dmem_req_valid			), 
+		.req_tag        (io_dmem_req_bits_tag		), 
+		.req_cmd        (io_dmem_req_bits_cmd		), 
+		.req_typ        (io_dmem_req_bits_typ		), 
+		.req_data       (io_dmem_s1_data_data		), 
+		.req_data_mask  (io_dmem_s1_data_mask		), 
+		.req_kill		(io_dmem_s1_kill			),
+		.rsp_valid      (io_dmem_resp_valid			), 
+		.rsp_nack		(io_dmem_s2_nack			),
+		.rsp_tag        (io_dmem_resp_bits_tag		), 
+		.rsp_typ        (io_dmem_resp_bits_typ		), 
+		.rsp_data       (io_dmem_resp_bits_data		));
+	
 	initial begin
-		$display("Hello from Rocket");
+		automatic cfg_t cfg = cfg_t::type_id::create();
+		cfg.vif = dmem_bfm.u_core;
+
+		uvm_config_db #(cfg_t)::set(uvm_top, "*m_core*", 
+				cfg_t::report_id, cfg);
 	end
+`endif // UNDEFINED
 endmodule
 
 
