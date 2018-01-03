@@ -6,3 +6,5 @@
 ./tests/rocket_soc_subsys_tests_pkg.sv
 ./tb/rocket_soc_subsys_tb.sv
 ./tb/Rocket.sv
+./tb/RocketBFM.sv
+./tb/RocketBFMBinds.sv

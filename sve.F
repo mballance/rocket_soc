@@ -12,6 +12,7 @@ ${UVM_HOME}/src/uvm_pkg.sv
 -F ${ROCKET_SOC}/ve/ve_sve.F
 -f ${ROCKET_SOC}/rtl/rocket_soc_rtl.f
 -F ${ROCKET_SOC}/subprojects/subprojects_sve.F
+-f ${RUNDIR}/rocket_soc_subsys_uvm/qs/RocketSocTB/RocketSocTB.f
 
 
 // ${RUNDIR}/rocket_soc_uvm/qs/

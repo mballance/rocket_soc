@@ -11,7 +11,7 @@
 module Rocket(
 		input         clock,
 		input         reset,
-		input         io_hartid,
+		input [1:0]   io_hartid,
 		input         io_interrupts_debug,
 		input         io_interrupts_mtip,
 		input         io_interrupts_msip,
@@ -278,107 +278,6 @@ module Rocket(
 	assign io_fpu_killx = 0;
 	assign io_fpu_killm = 0;
 	
-	reg [3:0] state = 0;
-	reg [39:0] addr = 'h6000_0000;
-	reg [6:0] tag = 0;
-	
-	parameter MT_B = 'b000;
-	parameter MT_H = 'b001;
-	parameter MT_W = 'b010;
-	parameter MT_D = 'b011;
-	parameter MT_BU = 'b100;
-	parameter MT_HU = 'b101;
-	parameter MT_WU = 'b110;
-	
-	parameter M_XRD = 'b00000;
-	parameter M_XWR = 'b00001;
-	
-`ifdef UNDEFINED
-	assign io_dmem_req_valid = (state == 0);
-	assign io_dmem_req_bits_addr = addr;
-	assign io_dmem_req_bits_tag = tag;
-	assign io_dmem_req_bits_cmd = 0; // M_XWR; // ??
-	assign io_dmem_req_bits_typ = 4; // MT_W; // ??
-`endif
-	assign io_dmem_req_bits_phys = 0; // ??
-//	assign io_dmem_s1_kill = io_dmem_s2_nack;
-`ifdef UNDEFINED	
-	assign io_dmem_s1_data_data = 5; //
-	assign io_dmem_s1_data_mask = 'h00;
-`endif
-	assign io_dmem_invalidate_lr = 0;
-
-`ifdef UNDEFINED
-	always @(posedge clock or reset) begin
-		if (reset == 1) begin
-			state <= 0;
-		end else begin
-			case (state)
-				0: begin
-					if (io_dmem_req_ready) begin
-						state <= 1;
-						addr <= addr + 4;
-						tag <= tag + 1;
-					end
-				end
-				
-				1: begin
-					if (io_dmem_resp_valid) begin
-						$display("Response %0d", io_dmem_resp_bits_tag);
-						state <= 0;
-					end else if (io_dmem_s2_nack) begin
-						$display("Response NACK");
-						state <= 0;
-					end else if (io_dmem_s2_xcpt_ae_st) begin
-						$display("Store AE Exception");
-						state <= 0;
-					end
-				end
-			endcase
-		end
-	end
-	parameter int NUM_ADDR_BITS = 40;
-	parameter int NUM_DATA_BITS = 64;
-	parameter int NUM_TAG_BITS = 7;
-	
-	hella_cache_master_bfm_core #(NUM_ADDR_BITS, NUM_DATA_BITS, NUM_TAG_BITS) core(clock, reset);
-`else // UNDEFINED
-	
-	parameter int NUM_ADDR_BITS = 40;
-	parameter int NUM_DATA_BITS = 64;
-	parameter int NUM_TAG_BITS = 7;
-	typedef hella_cache_master_config #(NUM_ADDR_BITS, NUM_DATA_BITS, NUM_TAG_BITS) cfg_t;
-	
-	hella_cache_master_bfm #(
-		.NUM_ADDR_BITS  (NUM_ADDR_BITS ), 
-		.NUM_DATA_BITS  (NUM_DATA_BITS ), 
-		.NUM_TAG_BITS   (NUM_TAG_BITS  )
-		) dmem_bfm (
-		.clock          (clock						), 
-		.reset          (reset						), 
-		.req_addr       (io_dmem_req_bits_addr		), 
-		.req_ready      (io_dmem_req_ready			), 
-		.req_valid      (io_dmem_req_valid			), 
-		.req_tag        (io_dmem_req_bits_tag		), 
-		.req_cmd        (io_dmem_req_bits_cmd		), 
-		.req_typ        (io_dmem_req_bits_typ		), 
-		.req_data       (io_dmem_s1_data_data		), 
-		.req_data_mask  (io_dmem_s1_data_mask		), 
-		.req_kill		(io_dmem_s1_kill			),
-		.rsp_valid      (io_dmem_resp_valid			), 
-		.rsp_nack		(io_dmem_s2_nack			),
-		.rsp_tag        (io_dmem_resp_bits_tag		), 
-		.rsp_typ        (io_dmem_resp_bits_typ		), 
-		.rsp_data       (io_dmem_resp_bits_data		));
-	
-	initial begin
-		automatic cfg_t cfg = cfg_t::type_id::create();
-		cfg.vif = dmem_bfm.u_core;
-
-		uvm_config_db #(cfg_t)::set(uvm_top, "*m_core*", 
-				cfg_t::report_id, cfg);
-	end
-`endif // UNDEFINED
 endmodule
 
 

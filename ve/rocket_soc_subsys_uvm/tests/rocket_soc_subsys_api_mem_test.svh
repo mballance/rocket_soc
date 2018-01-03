@@ -34,7 +34,7 @@ class rocket_soc_subsys_api_mem_test extends rocket_soc_subsys_test_base;
 		
 		phase.raise_objection(this, "Main");
 		
-		api = m_env.m_core.get_api();
+		api = m_env.m_core0.get_api();
 		
 		for (int unsigned addr='h8000_0000; addr<'h8000_0100; addr+=4) begin
 			bit[31:0] rdata;

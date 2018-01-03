@@ -9,7 +9,10 @@ class rocket_soc_subsys_env extends uvm_env;
 	typedef hella_cache_master_agent #(NUM_ADDR_BITS, NUM_DATA_BITS, NUM_TAG_BITS) 
 		hella_cache_master_agent_t;
 	
-	hella_cache_master_agent_t			m_core;
+	hella_cache_master_agent_t			m_core0;
+	hella_cache_master_agent_t			m_core1;
+	hella_cache_master_agent_t			m_core2;
+	hella_cache_master_agent_t			m_core3;
 
 	function new(string name, uvm_component parent=null);
 		super.new(name, parent);
@@ -23,9 +26,10 @@ class rocket_soc_subsys_env extends uvm_env;
 	virtual function void build_phase(input uvm_phase phase);
 		super.build_phase(phase);
 	
-`ifndef UNDEFINED
-		m_core = hella_cache_master_agent_t::type_id::create("m_core", this);
-`endif
+		m_core0 = hella_cache_master_agent_t::type_id::create("m_core0", this);
+		m_core1 = hella_cache_master_agent_t::type_id::create("m_core1", this);
+		m_core2 = hella_cache_master_agent_t::type_id::create("m_core2", this);
+		m_core3 = hella_cache_master_agent_t::type_id::create("m_core3", this);
 	endfunction
 
 	/**

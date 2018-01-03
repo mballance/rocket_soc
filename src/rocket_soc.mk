@@ -24,7 +24,7 @@ ROCKET_SOC_LIBS = $(ROCKET_SOC_LIB) $(ROCKET_SOC_DEPS)
 ROCKET_SOC_TB_LIBS = $(ROCKET_SOC_LIBS) $(SV_BFMS_JAR)
 
 ROCKET_SOC_GEN_SRC := RocketSoc.v
-ROCKET_SOC_GEN_TB_SRC := RocketSocTB.v
+ROCKET_SOC_GEN_TB_SRC := RocketSocTB/RocketSocTB.f
 
 else # Rules
 	
@@ -48,8 +48,9 @@ $(ROCKET_SOC_GEN_SRC) : $(ROCKET_SOC_LIBS)
 #		rocket_soc.RocketSocGen +BOOTROM_DIR=$(BUILD_DIR_A)
 		
 $(ROCKET_SOC_GEN_TB_SRC) : $(ROCKET_SOC_TB_LIBS) $(DTC_BUILD)
-	$(Q)export PATH="./dtc:$(PATH)" ; $(DO_CHISELG) rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
-#	$(Q)$(CHISELG) $(foreach l,$(ROCKET_SOC_TB_LIBS),-L$(l)) \
-#		rocket_soc.ve.RocketSocTBGen +BOOTROM_DIR=$(BUILD_DIR_A)
+	$(Q)export PATH="./dtc:$(PATH)" ; $(DO_CHISELG) \
+		-outdir RocketSocTB \
+		rocket_soc.ve.RocketSocTBGen \
+		+BOOTROM_DIR=$(BUILD_DIR_A)
 
 endif

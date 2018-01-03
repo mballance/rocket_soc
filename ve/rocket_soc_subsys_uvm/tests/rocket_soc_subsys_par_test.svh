@@ -44,10 +44,10 @@ class rocket_soc_subsys_par_test extends rocket_soc_subsys_test_base;
 			end
 		
 			fork
-				seq[0].start(m_env.m_core.m_seqr);
-				seq[1].start(m_env.m_core.m_seqr);
-				seq[2].start(m_env.m_core.m_seqr);
-				seq[3].start(m_env.m_core.m_seqr);
+				seq[0].start(m_env.m_core0.m_seqr);
+				seq[1].start(m_env.m_core0.m_seqr);
+				seq[2].start(m_env.m_core0.m_seqr);
+				seq[3].start(m_env.m_core0.m_seqr);
 			join
 		end
 		

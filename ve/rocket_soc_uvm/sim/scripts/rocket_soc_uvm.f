@@ -10,7 +10,7 @@ ${ROCKET_SOC}/subprojects/rocket-chip/vsrc/AsyncResetReg.v
 ${ROCKET_SOC}/subprojects/rocket-chip/vsrc/ClockDivider2.v
 ${ROCKET_SOC}/subprojects/rocket-chip/vsrc/ClockDivider3.v
 
-${RUNDIR}/rocket_soc_uvm/${SIM}/RocketSocTB.v
+-f ${BUILD_DIR_A}/RocketSocTB/RocketSocTB.f
 
 -f ${OC_WB_IP}/rtl/wb_uart/rtl.f
 

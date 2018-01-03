@@ -20,7 +20,7 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
     val uart0 = new UartIf
   });
  
-  val u_core = Module(new RocketSocCore(1, soc_p.romfile))
+  val u_core = Module(new RocketSocCore(4, soc_p.romfile))
  
   // We're not using the debug interface
   u_core.io.debug.tieoff_flipped(u_core.clock, u_core.reset)
@@ -68,7 +68,6 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   periph_ic.io.addr_limit(0) := 0x60000fff.asUInt()
   u_uart.io.t <> periph_ic.io.s(0)
   io.uart0 <> u_uart.io.s
-  
   
 }
 

@@ -51,15 +51,24 @@ _start:
   la x2, _stack_top
   add x2, x2, -8
 
+  csrr x0, mhartid // HW Thread ID (core)
+  li x1, 4
+  sll x1, x1, x0 // 0, 4, 8, etc
   li a0, DRAM_BASE
+  add a0, a0, x1 // 0x8000_0000, 0x8000_0004, ...
   li a1, 0x55eeaa00
+  add a1, a1, x0 // 0x55eeaa00, 0x55eeaa01, ...
 
 1:
 	sw a1, 0(a0)
 	lw a2, 0(a0)
+	bne a1, a2, 2
 	addi	a0, a0, 4
 	addi	a1, a1, 1
 	j	1b
+
+2:
+	j	2b
 
   /* clear BSS */
   la x26, _bss_start

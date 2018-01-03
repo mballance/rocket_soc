@@ -38,7 +38,7 @@ class rocket_soc_subsys_smoke_test extends rocket_soc_subsys_test_base;
 			seq.cmd = seq_item_t::M_XRD;
 			seq.typ = seq_item_t::MT_B;
 			
-			seq.start(m_env.m_core.m_seqr);
+			seq.start(m_env.m_core0.m_seqr);
 		end
 		
 		phase.drop_objection(this, "Main");

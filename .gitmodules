@@ -54,3 +54,7 @@
 	path = subprojects/uex
 	url = https://github.com/mballance/uex.git
 	branch = master
+[submodule "subprojects/googletest_uvm"]
+	path = subprojects/googletest_uvm
+	url = https://github.com/mballance/googletest_uvm.git
+	branch = master
