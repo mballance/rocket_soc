@@ -13,6 +13,7 @@ package rocket_soc_subsys_tests_pkg;
     `include "rocket_soc_subsys_par_test.svh"
     `include "rocket_soc_subsys_api_mem_test.svh"
     `include "rocket_soc_subsys_false_sharing.svh"
+    `include "rocket_soc_subsys_false_sharing_stepped.svh"
     `include "rocket_soc_subsys_unit_test.svh"
 	
 endpackage

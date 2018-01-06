@@ -23,6 +23,30 @@ class rocket_soc_subsys_false_sharing extends rocket_soc_subsys_test_base;
 		rocket_soc_subsys_env::NUM_DATA_BITS, 
 		rocket_soc_subsys_env::NUM_TAG_BITS) seq_item_t;
 	
+	task test(
+		string 				id, 
+		bit[31:0] 			addr,
+		sv_bfms_rw_api_if	api);
+		
+		for (int i=0; i<256; i++) begin
+			bit[31:0] rdata;
+			api.write32(addr, i);
+			api.read32(addr, rdata);
+			if (rdata != i) begin
+				`uvm_error(get_name(), 
+					$sformatf("%0s mismatch: write=%0d read=%0d",
+						id, i, rdata));
+			end else begin
+				`uvm_info(get_name(), 
+					$sformatf("%0s match: write=%0d read=%0d",
+						id, i, rdata),
+					UVM_LOW);
+				break;
+			end
+		end		
+	endtask
+	
+	
 	/**
 	 * Task: run_phase
 	 *
@@ -30,7 +54,6 @@ class rocket_soc_subsys_false_sharing extends rocket_soc_subsys_test_base;
 	 */
 	task run_phase(input uvm_phase phase);
 		sv_bfms_rw_api_if api0, api1, api2, api3;
-		int data;
 		
 		phase.raise_objection(this, "Main");
 		
@@ -38,41 +61,40 @@ class rocket_soc_subsys_false_sharing extends rocket_soc_subsys_test_base;
 		api1 = m_env.m_core1.get_api();
 		api2 = m_env.m_core2.get_api();
 		api3 = m_env.m_core3.get_api();
+		
+//		for (int i=0; i<4; i++) begin
+//			bit[31:0] rdata;
+//			api0.write32('h8000_0000, i);
+//			api0.read32('h8000_0000, rdata);
+//			if (rdata != i) begin
+//				`uvm_error(get_name(), $sformatf("INIT mismatch: write=%0d read=%0d",
+//						i, rdata));
+//			end
+//			
+//			api1.write32('h8000_0000, i);
+//			api1.read32('h8000_0000, rdata);
+//			if (rdata != i) begin
+//				`uvm_error(get_name(), $sformatf("INIT mismatch: write=%0d read=%0d",
+//						i, rdata));
+//			end
+//			
+//			api2.write32('h8000_0000, i);
+//			api2.read32('h8000_0000, rdata);
+//			if (rdata != i) begin
+//				`uvm_error(get_name(), $sformatf("INIT mismatch: write=%0d read=%0d",
+//						i, rdata));
+//			end
+//			
+//		end
 	
 		fork
-			begin
-				for (int i=0; i<256; i++) begin
-					bit[31:0] rdata;
-					api0.write32('h8000_0000, i);
-					api0.read32('h8000_0000, rdata);
-					if (rdata != i) begin
-						`uvm_error(get_name(), 
-							$sformatf("T0 mismatch: write=%0d read=%0d",
-								i, rdata));
-					end
-				end
-			end
-			begin
-				for (int i=0; i<256; i++) begin
-					bit[31:0] rdata;
-					api1.write32('h8000_0004, i);
-					for (int j=0; j<8; j++) begin
-						api1.read32('h8000_0004, rdata);
-						if (rdata != i) begin
-							`uvm_error(get_name(), 
-								$sformatf("T1 mismatch: j=%0d write=%0d read=%0d",
-									j, i, rdata));
-						end else begin
-							`uvm_info(get_name(), 
-								$sformatf("T1 match: j=%0d write=%0d read=%0d",
-									j, i, rdata),
-								UVM_LOW);
-						end
-					end
-				end
-			end
+			test("T0", 'h8000_0000, api0);
+			test("T1", 'h8000_0004, api1);
+			test("T2", 'h8000_0008, api2);
+			test("T3", 'h8000_000C, api3);
 		join
-		
+	
+		$display("NOTE: end of test");
 		phase.drop_objection(this, "Main");
 	endtask
 	

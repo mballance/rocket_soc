@@ -26,30 +26,33 @@ module Rocket(
 		output [38:0] io_imem_sfence_bits_addr,
 		output        io_imem_resp_ready,
 		input         io_imem_resp_valid,
-		input         io_imem_resp_bits_btb_valid,
-		input         io_imem_resp_bits_btb_bits_taken,
-		input         io_imem_resp_bits_btb_bits_bridx,
-		input  [4:0]  io_imem_resp_bits_btb_bits_entry,
-		input  [7:0]  io_imem_resp_bits_btb_bits_bht_history,
-		input  [1:0]  io_imem_resp_bits_btb_bits_bht_value,
+//		input         io_imem_resp_bits_btb_valid,
+		input         io_imem_resp_bits_btb_taken,
+		input         io_imem_resp_bits_btb_bridx,
+		input  [4:0]  io_imem_resp_bits_btb_entry,
+		input  [7:0]  io_imem_resp_bits_btb_bht_history,
+//		input  [1:0]  io_imem_resp_bits_btb_bits_bht_value,
 		input  [39:0] io_imem_resp_bits_pc,
 		input  [31:0] io_imem_resp_bits_data,
 		input         io_imem_resp_bits_xcpt_pf_inst,
 		input         io_imem_resp_bits_xcpt_ae_inst,
 		input         io_imem_resp_bits_replay,
 		output        io_imem_btb_update_valid,
-		output        io_imem_btb_update_bits_prediction_valid,
-		output [4:0]  io_imem_btb_update_bits_prediction_bits_entry,
-		output [7:0]  io_imem_btb_update_bits_prediction_bits_bht_history,
-		output [1:0]  io_imem_btb_update_bits_prediction_bits_bht_value,
+//		output        io_imem_btb_update_bits_prediction_valid,
+//		output [4:0]  io_imem_btb_update_bits_prediction_bits_entry,
+		output [4:0]  io_imem_btb_update_bits_prediction_entry,
+//		output [7:0]  io_imem_btb_update_bits_prediction_bits_bht_history,
+//		output [1:0]  io_imem_btb_update_bits_prediction_bits_bht_value,
 		output [38:0] io_imem_btb_update_bits_pc,
 		output        io_imem_btb_update_bits_isValid,
 		output [38:0] io_imem_btb_update_bits_br_pc,
 		output [1:0]  io_imem_btb_update_bits_cfiType,
 		output        io_imem_bht_update_valid,
-		output [7:0]  io_imem_bht_update_bits_prediction_bits_bht_history,
-		output [1:0]  io_imem_bht_update_bits_prediction_bits_bht_value,
+//		output [7:0]  io_imem_bht_update_bits_prediction_bits_bht_history,
+		output [7:0]  io_imem_bht_update_bits_prediction_history,
+//		output [1:0]  io_imem_bht_update_bits_prediction_bits_bht_value,
 		output [38:0] io_imem_bht_update_bits_pc,
+		output        io_imem_bht_update_bits_branch,
 		output        io_imem_bht_update_bits_taken,
 		output        io_imem_bht_update_bits_mispredict,
 		output        io_imem_flush_icache,
@@ -185,10 +188,11 @@ module Rocket(
 	assign io_imem_sfence_bits_addr = 0;
 	assign io_imem_resp_ready = 1; // Always ready
 	assign io_imem_btb_update_valid = 0;
-	assign io_imem_btb_update_bits_prediction_valid = 0;
-	assign io_imem_btb_update_bits_prediction_bits_entry = 0;
-	assign io_imem_btb_update_bits_prediction_bits_bht_history = 0;
-	assign io_imem_btb_update_bits_prediction_bits_bht_value = 0;
+//	assign io_imem_btb_update_bits_prediction_valid = 0;
+//	assign io_imem_btb_update_bits_prediction_bits_entry = 0;
+//	assign io_imem_btb_update_bits_prediction_bits_bht_history = 0;
+	assign io_imem_btb_update_bits_prediction_bits_history = 0;
+//	assign io_imem_btb_update_bits_prediction_bits_bht_value = 0;
 	assign io_imem_btb_update_bits_pc = 0;
 	assign io_imem_btb_update_bits_isValid = 0;
 	assign io_imem_btb_update_bits_br_pc = 0;
