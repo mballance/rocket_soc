@@ -13,6 +13,8 @@ class RocketAxi4Master2Axi4Master(
   require(rocket_axi4_p.dataBits == axi4_p.DATA_WIDTH)
   require(rocket_axi4_p.idBits == axi4_p.ID_WIDTH)
   
+  val reg = Reg(UInt(1.W), init=1.asUInt())
+  
   val io = IO(new Bundle {
     val rocket_axi4 = Flipped(new AXI4Bundle(rocket_axi4_p))
     val axi4 = new AXI4(axi4_p)
@@ -42,7 +44,7 @@ class RocketAxi4Master2Axi4Master(
   io.axi4.arreq.ARQOS := io.rocket_axi4.ar.bits.qos
   io.axi4.arreq.ARREGION := 0.asUInt() // io.rocket_axi4.ar.bits.region
   io.axi4.arreq.ARVALID := io.rocket_axi4.ar.valid
-  io.rocket_axi4.ar.ready := io.axi4.arready
+  io.rocket_axi4.ar.ready := (io.axi4.arready & reg)
   
   io.axi4.wreq.WDATA := io.rocket_axi4.w.bits.data
   io.axi4.wreq.WSTRB := io.rocket_axi4.w.bits.strb

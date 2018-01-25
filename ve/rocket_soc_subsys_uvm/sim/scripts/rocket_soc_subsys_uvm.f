@@ -9,6 +9,7 @@
 +incdir+${ROCKET_SOC}/ve/rocket_soc_subsys_uvm/tests
 
 -f ${SV_BFMS}/api/sv/sv.f
+-f ${UEX}/impl/sv/uex_sv.f
 
 +incdir+${SV_BFMS}/hella_cache_master/uvm
 ${SV_BFMS}/hella_cache_master/uvm/hella_cache_master_agent_pkg.sv

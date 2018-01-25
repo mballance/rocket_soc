@@ -41,7 +41,6 @@ class rocket_soc_subsys_false_sharing extends rocket_soc_subsys_test_base;
 					$sformatf("%0s match: write=%0d read=%0d",
 						id, i, rdata),
 					UVM_LOW);
-				break;
 			end
 		end		
 	endtask
@@ -62,36 +61,11 @@ class rocket_soc_subsys_false_sharing extends rocket_soc_subsys_test_base;
 		api2 = m_env.m_core2.get_api();
 		api3 = m_env.m_core3.get_api();
 		
-//		for (int i=0; i<4; i++) begin
-//			bit[31:0] rdata;
-//			api0.write32('h8000_0000, i);
-//			api0.read32('h8000_0000, rdata);
-//			if (rdata != i) begin
-//				`uvm_error(get_name(), $sformatf("INIT mismatch: write=%0d read=%0d",
-//						i, rdata));
-//			end
-//			
-//			api1.write32('h8000_0000, i);
-//			api1.read32('h8000_0000, rdata);
-//			if (rdata != i) begin
-//				`uvm_error(get_name(), $sformatf("INIT mismatch: write=%0d read=%0d",
-//						i, rdata));
-//			end
-//			
-//			api2.write32('h8000_0000, i);
-//			api2.read32('h8000_0000, rdata);
-//			if (rdata != i) begin
-//				`uvm_error(get_name(), $sformatf("INIT mismatch: write=%0d read=%0d",
-//						i, rdata));
-//			end
-//			
-//		end
-	
 		fork
 			test("T0", 'h8000_0000, api0);
-			test("T1", 'h8000_0004, api1);
-			test("T2", 'h8000_0008, api2);
-			test("T3", 'h8000_000C, api3);
+			test("T1", 'h8000_0010, api1);
+//			test("T2", 'h8000_0008, api2);
+//			test("T3", 'h8000_000C, api3);
 		join
 	
 		$display("NOTE: end of test");

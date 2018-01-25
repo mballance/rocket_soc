@@ -10,6 +10,7 @@ import freechips.rocketchip.coreplex.WithNBigCores
 import freechips.rocketchip.coreplex.WithBootROMFile
 import freechips.rocketchip.config.Config
 import freechips.rocketchip.groundtest.HasPeripheryTestRAMSlave
+import freechips.rocketchip.coreplex.WithNBanksPerMemChannel
 
 class RocketSocCore(
     val N_BIG_CORES : Int = 1,
@@ -33,6 +34,7 @@ class RocketSocCore(
   val core_cfg = new Config(
       new WithNBigCores(N_BIG_CORES) ++
       new WithBootROMFile(romfile) ++
+      new WithNBanksPerMemChannel(2) ++
       new BaseConfig);
   implicit val p = Parameters.root(core_cfg.toInstance)
  

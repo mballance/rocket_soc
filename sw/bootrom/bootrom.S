@@ -51,24 +51,40 @@ _start:
   la x2, _stack_top
   add x2, x2, -8
 
-  csrr x0, mhartid // HW Thread ID (core)
+  csrr x9, mhartid // HW Thread ID (core)
   li x1, 4
-  sll x1, x1, x0 // 0, 4, 8, etc
-  li a0, DRAM_BASE
-  add a0, a0, x1 // 0x8000_0000, 0x8000_0004, ...
-  li a1, 0x55eeaa00
-  add a1, a1, x0 // 0x55eeaa00, 0x55eeaa01, ...
+  sll x1, x1, x9 // 4, 8, 10, etc
+  li x3, DRAM_BASE
+  add x3, x3, x1 // 0x8000_0000, 0x8000_0004, ...
+  li x4, 0x00eeaa00
+  sll x1, x9, 24 
+  add x4, x4, x1
+  li x6, 0xdeadbeef
 
 1:
-	sw a1, 0(a0)
-	lw a2, 0(a0)
-	bne a1, a2, 2
-	addi	a0, a0, 4
-	addi	a1, a1, 1
+	sw x4, 0(x3)
+	lw x4, 0(x3)
+	addi	x4, x4, 1
 	j	1b
+	addi	x0, x0, 0
+	addi	x0, x0, 0
+	addi	x0, x0, 0
+	addi	x0, x0, 0
 
+/*
+1:
+	sw x4, 0(x3)
+	lw x5, 0(x3)
+	beq x4, x5, 2
+	sw x6, 0(x3)
 2:
-	j	2b
+	addi	x4, x4, 1
+	j	1b
+	addi	x0, x0, 0
+	addi	x0, x0, 0
+	addi	x0, x0, 0
+	addi	x0, x0, 0
+ */
 
   /* clear BSS */
   la x26, _bss_start
