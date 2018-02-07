@@ -6,5 +6,7 @@ include $(ROCKET_SOC)/subprojects/googletest_uvm/src/googletest_uvm.mk
 include $(ROCKET_SOC)/ve/rocket_soc_subsys_uvm/tests/unit/unit.mk
 include $(UEX)/uex.mk
 include $(UEX)/impl/sv/uex_env_sv.mk
+include $(VMON)/src/monitor/vmon_monitor.mk
 
-DPI_OBJS_LIBS += unit_test.o libuex.o
+
+DPI_OBJS_LIBS += unit_test.o libuex.o libvmon_monitor.o

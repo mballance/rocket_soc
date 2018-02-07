@@ -175,8 +175,6 @@ module Rocket(
 		input         io_rocc_cmd_ready,
 		input         io_rocc_interrupt
 		);
-	import hella_cache_master_agent_pkg::*;
-	import uvm_pkg::*;
 	
 	// Stub out imem interface
 	assign io_imem_req_valid = 0;
@@ -188,12 +186,15 @@ module Rocket(
 	assign io_imem_sfence_bits_addr = 0;
 	assign io_imem_resp_ready = 1; // Always ready
 	assign io_imem_btb_update_valid = 0;
+	assign io_imem_btb_update_bits_prediction_entry = 0;
+	assign io_imem_bht_update_bits_prediction_history = 0;
 //	assign io_imem_btb_update_bits_prediction_valid = 0;
 //	assign io_imem_btb_update_bits_prediction_bits_entry = 0;
 //	assign io_imem_btb_update_bits_prediction_bits_bht_history = 0;
 	assign io_imem_btb_update_bits_prediction_bits_history = 0;
 //	assign io_imem_btb_update_bits_prediction_bits_bht_value = 0;
 	assign io_imem_btb_update_bits_pc = 0;
+	assign io_imem_bht_update_bits_branch = 0;
 	assign io_imem_btb_update_bits_isValid = 0;
 	assign io_imem_btb_update_bits_br_pc = 0;
 	assign io_imem_btb_update_bits_cfiType = 0;
@@ -204,12 +205,16 @@ module Rocket(
 	assign io_imem_bht_update_bits_taken = 0;
 	assign io_imem_bht_update_bits_mispredict = 0;
 	assign io_imem_flush_icache = 0;
+	
+	assign io_dmem_req_bits_phys = 0;
 
 	assign io_ptw_ptbr_mode = 'hb;
 	assign io_ptw_ptbr_asid = 0;
 	assign io_ptw_ptbr_ppn = 'h78f4788e78f;
 	assign io_ptw_sfence_valid = 0;
-	assign io_ptw_sfence_bits_rs1 = 0;
+	
+	assign io_ptw_sfence_bits_rs1 = 1;
+	
 	assign io_ptw_status_dprv = 3;
 	assign io_ptw_status_prv = 3;
 	assign io_ptw_status_mxr = 0;

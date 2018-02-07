@@ -13,6 +13,7 @@ class rocket_soc_subsys_env extends uvm_env;
 	hella_cache_master_agent_t			m_core1;
 	hella_cache_master_agent_t			m_core2;
 	hella_cache_master_agent_t			m_core3;
+	uart_serial_agent					uart0;
 
 	function new(string name, uvm_component parent=null);
 		super.new(name, parent);
@@ -30,6 +31,8 @@ class rocket_soc_subsys_env extends uvm_env;
 		m_core1 = hella_cache_master_agent_t::type_id::create("m_core1", this);
 		m_core2 = hella_cache_master_agent_t::type_id::create("m_core2", this);
 		m_core3 = hella_cache_master_agent_t::type_id::create("m_core3", this);
+		
+		uart0 = uart_serial_agent::type_id::create("uart0", this);
 	endfunction
 
 	/**

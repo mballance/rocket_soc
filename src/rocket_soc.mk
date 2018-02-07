@@ -51,6 +51,6 @@ $(ROCKET_SOC_GEN_TB_SRC) : $(ROCKET_SOC_TB_LIBS) $(DTC_BUILD)
 	$(Q)export PATH="./dtc:$(PATH)" ; $(DO_CHISELG) \
 		-outdir RocketSocTB \
 		rocket_soc.ve.RocketSocTBGen \
-		+BOOTROM_DIR=$(BUILD_DIR_A)
+		+BOOTROM_DIR=$(BUILD_DIR_A)/esw
 
 endif

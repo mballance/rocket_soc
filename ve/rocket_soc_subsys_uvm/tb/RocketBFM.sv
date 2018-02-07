@@ -8,7 +8,7 @@
  * 
  * TODO: Add module documentation
  */
-module RocketBFM #(parameter bfm_tag="*m_core*")(
+module RocketBFM (
 		input         clock,
 		input         reset,
 		input         io_interrupts_debug,
@@ -44,8 +44,6 @@ module RocketBFM #(parameter bfm_tag="*m_core*")(
 		output        io_dmem_invalidate_lr,
 		input         io_dmem_ordered
 		);
-	import hella_cache_master_agent_pkg::*;
-	import uvm_pkg::*;
 	
 	assign io_dmem_req_bits_phys = 0; // ??
 	assign io_dmem_invalidate_lr = 0;
@@ -53,8 +51,8 @@ module RocketBFM #(parameter bfm_tag="*m_core*")(
 	parameter int NUM_ADDR_BITS = 40;
 	parameter int NUM_DATA_BITS = 64;
 	parameter int NUM_TAG_BITS = 7;
-	typedef hella_cache_master_config #(NUM_ADDR_BITS, NUM_DATA_BITS, NUM_TAG_BITS) cfg_t;
-	
+
+	// How do we bind across HDL/HVL?
 	hella_cache_master_bfm #(
 		.NUM_ADDR_BITS  (NUM_ADDR_BITS ), 
 		.NUM_DATA_BITS  (NUM_DATA_BITS ), 
@@ -77,14 +75,7 @@ module RocketBFM #(parameter bfm_tag="*m_core*")(
 		.rsp_typ        (io_dmem_resp_bits_typ		), 
 		.rsp_data       (io_dmem_resp_bits_data		));
 	
-	initial begin
-		automatic cfg_t cfg = cfg_t::type_id::create();
-		
-		cfg.vif = dmem_bfm.u_core;
 
-		uvm_config_db #(cfg_t)::set(uvm_top, bfm_tag,
-				cfg_t::report_id, cfg);
-	end
 endmodule
 
 

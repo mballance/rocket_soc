@@ -55,61 +55,54 @@ class rocket_soc_vmon_h2m implements vmon_h2m_if;
 	
 endclass
 
-class rocket_soc_test_base extends uvm_test;
+class rocket_soc_subsys_uex_vmon_test extends rocket_soc_subsys_uex_test;
+	`uvm_component_utils(rocket_soc_subsys_uex_vmon_test)
 	
-	`uvm_component_utils(rocket_soc_test_base)
-	
-	rocket_soc_env				m_env;
 	vmon_client					m_vmon_client;
-	
+
 	function new(string name, uvm_component parent=null);
 		super.new(name,parent);
 	endfunction
 	
 	function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
-	
-		m_env = rocket_soc_env::type_id::create("m_env", this);
 		
 		m_vmon_client = new();
 	endfunction
-
-	/**
-	 * Function: connect_phase
-	 *
-	 * Override from class 
-	 */
-	virtual function void connect_phase(input uvm_phase phase);
+	
+	function void connect_phase(uvm_phase phase);
 		rocket_soc_vmon_m2h m2h = new(m_env.uart0);
 		rocket_soc_vmon_h2m h2m = new(m_env.uart0);
+		super.connect_phase(phase);
 		
 		m_vmon_client.add_m2h_if(m2h);
 		m_vmon_client.add_h2m_if(h2m);
-
 	endfunction
 	
-	virtual task connect_to_sw();
+	task run_phase(uvm_phase phase);
 		bit ok;
+		phase.raise_objection(this, "Main");
+
+		if (!$value$plusargs("GOOGLETEST=%s", m_googletest)) begin
+			`uvm_fatal (get_name(), "No GOOGLETEST specified");
+		end
+	
+		fork
+			m_sys.run();
+		join_none
 		
 		m_vmon_client.connect(ok);
 		
 		$display("OK=%0d", ok);
-	endtask
-
-	/**
-	 * Task: run_phase
-	 *
-	 * Override from class 
-	 */
-	virtual task run_phase(input uvm_phase phase);
-		
-		phase.raise_objection(this, "Main");
-		
-		connect_to_sw();
-		
-	endtask
-
 	
+		// Tell the client to exit
+		m_vmon_client.exit();
+		
+		phase.drop_objection(this, "Main");
+			
+	endtask
+	
+
 	
 endclass
 

@@ -52,6 +52,20 @@ _start:
   add x2, x2, -8
 
   csrr x9, mhartid // HW Thread ID (core)
+  bne x9, x0, 2
+  li x3, 0x60000003
+  li x4, 1
+1:
+  sb x4, 0(x3)
+  addi x4, x4, 1
+  j 1b
+
+
+2: // non-primary core
+	j	2b
+
+
+/*
   li x1, 4
   sll x1, x1, x9 // 4, 8, 10, etc
   li x3, DRAM_BASE
@@ -70,6 +84,7 @@ _start:
 	addi	x0, x0, 0
 	addi	x0, x0, 0
 	addi	x0, x0, 0
+ */
 
 /*
 1:

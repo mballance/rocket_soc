@@ -19,7 +19,7 @@ class RocketSocCore(
   val mmio_p = new AXI4.Parameters(
       ADDR_WIDTH = 31,
       DATA_WIDTH = 64,
-      ID_WIDTH = 5)
+      ID_WIDTH = 4)
   
   val mem_p = new AXI4.Parameters(
       ADDR_WIDTH = 32,
@@ -55,7 +55,7 @@ class RocketSocCore(
   val mmio_axi4_p = new AXI4BundleParameters(
     addrBits = 31,
     dataBits = 64,
-    idBits = 5,
+    idBits = 4,
     userBits = 0
   )
   
