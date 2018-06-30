@@ -1,4 +1,5 @@
 
+amba_sys_ip@https://github.com/mballance/amba_sys_ip.git
 rocket-chip@https://github.com/mballance/rocket-chip.git
 googletest_uvm@https://github.com/mballance/googletest_uvm.git
 memory_primitives@https://github.com/mballance/memory_primitives.git
