@@ -1,0 +1,9 @@
+
+rocket-chip@https://github.com/mballance/rocket-chip.git
+googletest_uvm@https://github.com/mballance/googletest_uvm.git
+memory_primitives@https://github.com/mballance/memory_primitives.git
+oc_wb_ip@https://github.com/mballance/oc_wb_ip.git
+uex@https://github.com/mballance/uex.git
+vmon@https://github.com/mballance/vmon.git
+wb_sys_ip@https://github.com/mballance/wb_sys_ip.git
+
