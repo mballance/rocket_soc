@@ -1,4 +1,9 @@
-
+#****************************************************************************
+#* packages.mk
+#* 
+#* Package manifest file for rocket_soc
+#****************************************************************************
+chiselscripts@https://github.com/mballance/chiselscripts/releases/download/0.0.2/chiselscripts-0.0.2.tar.gz
 amba_sys_ip@https://github.com/mballance/amba_sys_ip.git
 rocket-chip@https://github.com/mballance/rocket-chip.git
 googletest_uvm@https://github.com/mballance/googletest_uvm.git

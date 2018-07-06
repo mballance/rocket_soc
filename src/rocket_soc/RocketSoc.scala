@@ -8,7 +8,6 @@ import oc_wb_ip.wb_uart.WishboneUART
 
 import freechips.rocketchip.config._
 import freechips.rocketchip.diplomacy._
-import freechips.rocketchip.coreplex._
 import freechips.rocketchip.amba.axi4._
 
 import amba_sys_ip.axi4.Axi4WishboneBridge
@@ -22,8 +21,9 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
  
   val u_core = Module(new RocketSocCore(4, soc_p.romfile))
  
+ 
   // We're not using the debug interface
-  u_core.io.debug.tieoff_flipped(u_core.clock, u_core.reset)
+  u_core.io.debug.tieoff_flipped(u_core.clock, reset.toBool())
   
   // We're not using the frontend bus either
   u_core.io.l2_frontend_bus.tieoff_flipped()

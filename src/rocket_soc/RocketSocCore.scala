@@ -6,11 +6,12 @@ import freechips.rocketchip.amba.axi4.AXI4BundleParameters
 import freechips.rocketchip.system._
 import freechips.rocketchip.diplomacy.LazyModule
 import freechips.rocketchip.config.Parameters
-import freechips.rocketchip.coreplex.WithNBigCores
-import freechips.rocketchip.coreplex.WithBootROMFile
+import freechips.rocketchip.subsystem.WithNBigCores
+import freechips.rocketchip.subsystem.WithBootROMFile
 import freechips.rocketchip.config.Config
 import freechips.rocketchip.groundtest.HasPeripheryTestRAMSlave
-import freechips.rocketchip.coreplex.WithNBanksPerMemChannel
+import freechips.rocketchip.subsystem.WithNBanksPerMemChannel
+import freechips.rocketchip.config.View
 
 class RocketSocCore(
     val N_BIG_CORES : Int = 1,
@@ -31,12 +32,13 @@ class RocketSocCore(
       DATA_WIDTH = 64,
       ID_WIDTH = 8)
   
+  
   val core_cfg = new Config(
       new WithNBigCores(N_BIG_CORES) ++
       new WithBootROMFile(romfile) ++
       new WithNBanksPerMemChannel(2) ++
       new BaseConfig);
-  implicit val p = Parameters.root(core_cfg.toInstance)
+  implicit val p = core_cfg.toInstance
  
   // TODO: route interrupts out
   val io = IO(new Bundle {

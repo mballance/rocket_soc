@@ -1,57 +1,52 @@
 
-ROCKET_CHIP_SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-ROCKET_CHIP_DIR := $(abspath $(ROCKET_CHIP_SCRIPTS_DIR)/..)
-PACKAGES_DIR ?= $(ROCKET_CHIP_DIR)/packages
-LIB_DIR = $(ROCKET_CHIP_DIR)/lib
+ROCKET_SOC_SCRIPTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+ROCKET_SOC_DIR := $(abspath $(ROCKET_SOC_SCRIPTS_DIR)/..)
+PACKAGES_DIR ?= $(ROCKET_SOC_DIR)/packages
+LIB_DIR = $(ROCKET_SOC_DIR)/lib
 
 # Must support dual modes: 
 # - build dependencies if this project is the active one
 # - rely on the upper-level makefile to resolve dependencies if we're not
 -include $(PACKAGES_DIR)/packages.mk
-include $(ROCKET_CHIP_DIR)/etc/ivpm.info
+include $(ROCKET_SOC_DIR)/etc/ivpm.info
 
 # include $(CHISELLIB_DIR)/src/chisellib.mk
 include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
-include $(ROCKET_CHIP_DIR)/mkfiles/rocket-chip.mk
+include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
+include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
+include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
+include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
+include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
+include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
+include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
+include $(ROCKET_SOC_DIR)/mkfiles/rocket_soc.mk
 
-SV_BFMS_SRC := \
-  $(wildcard $(SV_BFMS_DIR)/src/sv_bfms/axi4/*.scala) \
-  $(wildcard $(SV_BFMS_DIR)/src/sv_bfms/axi4/qvip/*.scala) \
-  $(wildcard $(SV_BFMS_DIR)/src/sv_bfms/generic_sram_line_en_master/*.scala) \
-  $(wildcard $(SV_BFMS_DIR)/src/sv_bfms/uart/*.scala) 
-
-HARDFLOAT_SRC := \
-  $(wildcard $(ROCKET_CHIP_DIR)/hardfloat/src/main/scala/hardfloat/*.scala)
-
-ROCKET_CHIP_MACROS_SRC := \
-  $(wildcard $(ROCKET_CHIP_DIR)/macros/src/main/scala/freechips/rocketchip/*.scala)
-
-ROCKET_CHIP_SRC = $(shell find $(ROCKET_CHIP_DIR)/src -name '*.scala')
-
+ROCKET_SOC_SRC := \
+  $(wildcard $(ROCKET_SOC_DIR)/src/rocket_soc/*.scala) \
+  $(wildcard $(ROCKET_SOC_DIR)/src/rocket_soc/ic/*.scala) \
+  $(wildcard $(ROCKET_SOC_DIR)/src/rocket_soc/ic/ve/*.scala) \
+  $(wildcard $(ROCKET_SOC_DIR)/src/rocket_soc/ve/*.scala)
 
 RULES := 1
 
 ifeq (true,$(PHASE2))
-# build : $(ROCKET_CHIP_JAR) $(ROCKET_CHIP_MACROS_JAR) $(HARDFLOAT_JAR)
-build : $(HARDFLOAT_JAR) $(ROCKET_CHIP_MACROS_JAR) $(ROCKET_CHIP_JAR)
+build : $(ROCKET_SOC_JAR)
+
+clean : 
+	$(Q)rm -rf $(ROCKET_SOC_DIR)/build $(ROCKET_SOC_DIR)/lib
+
 else
-build : $(rocket-chip_deps)
-	$(MAKE) -f $(ROCKET_CHIP_SCRIPTS_DIR)/ivpm.mk PHASE2=true build
+build : $(rocket_soc_deps)
+	$(MAKE) -f $(ROCKET_SOC_SCRIPTS_DIR)/ivpm.mk PHASE2=true build
+
+clean : $(rocket_soc_clean_deps)
+	$(MAKE) -f $(ROCKET_SOC_SCRIPTS_DIR)/ivpm.mk PHASE2=true clean
+
 endif
 
-$(HARDFLOAT_JAR) : $(HARDFLOAT_SRC)
+$(ROCKET_SOC_JAR) : $(ROCKET_SOC_SRC) $(ROCKET_SOC_DEPS)
 	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
 	$(Q)$(DO_CHISELC)
-
-$(ROCKET_CHIP_MACROS_JAR) : $(ROCKET_CHIP_MACROS_SRC)
-	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
-	$(Q)$(DO_CHISELC)
-
-$(ROCKET_CHIP_JAR) : $(ROCKET_CHIP_SRC) \
-  $(ROCKET_CHIP_MACROS_JAR) $(HARDFLOAT_JAR)
-	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
-	$(Q)$(DO_CHISELC) 
-	$(Q)touch $@
 
 release : build
 	$(Q)rm -rf $(CHISELLIB_DIR)/build
@@ -64,7 +59,8 @@ release : build
 		tar czf chisellib-$(version).tar.gz chisellib
 	$(Q)rm -rf $(CHISELLIB_DIR)/build/chisellib
 
-include $(ROCKET_CHIP_DIR)/mkfiles/rocket-chip.mk
 include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
+include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
+include $(ROCKET_SOC_DIR)/mkfiles/rocket_soc.mk
 -include $(PACKAGES_DIR)/packages.mk
 

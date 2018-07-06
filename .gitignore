@@ -8,3 +8,5 @@
 /bin/
 /bin/
 packages/
+lib/
+build/
