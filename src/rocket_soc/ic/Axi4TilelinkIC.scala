@@ -51,7 +51,7 @@ class Axi4TilelinkIC extends Module {
   });
   
   val core_cfg = new Config(new BaseConfig);
-  implicit val p = Parameters.root(core_cfg.toInstance)  
+  implicit val p = core_cfg.toInstance
  
 
   val ic_lm = LazyModule(new Axi4TilelinkIC_lm)
