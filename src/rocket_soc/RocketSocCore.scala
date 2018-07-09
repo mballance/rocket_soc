@@ -11,7 +11,10 @@ import freechips.rocketchip.subsystem.WithBootROMFile
 import freechips.rocketchip.config.Config
 import freechips.rocketchip.groundtest.HasPeripheryTestRAMSlave
 import freechips.rocketchip.subsystem.WithNBanksPerMemChannel
-import freechips.rocketchip.config.View
+import freechips.rocketchip.subsystem.ExtMem
+import freechips.rocketchip.subsystem.MasterPortParams
+import freechips.rocketchip.subsystem.MemoryBusKey
+import freechips.rocketchip.diplomacy._
 
 class RocketSocCore(
     val N_BIG_CORES : Int = 1,
@@ -37,7 +40,13 @@ class RocketSocCore(
       new WithNBigCores(N_BIG_CORES) ++
       new WithBootROMFile(romfile) ++
       new WithNBanksPerMemChannel(2) ++
-      new BaseConfig);
+      new BaseConfig().alter((site,here,up) => {
+        case ExtMem => MasterPortParams(
+            base = x"4000_0000",
+            size = x"1000_0000",
+            beatBytes = site(MemoryBusKey).beatBytes,
+            idBits = 4)
+      }));
   implicit val p = core_cfg.toInstance
  
   // TODO: route interrupts out
@@ -48,7 +57,8 @@ class RocketSocCore(
     val debug = new DebugIOIf()
   })
   
-  val rocket_core_lm = LazyModule(new ExampleRocketSystem with HasPeripheryTestRAMSlave)
+  val rocket_core_lm = LazyModule(new ExampleRocketSystem
+      with HasPeripheryTestRAMSlave)
 //  val rocket_core_lm = LazyModule(new ExampleRocketSystem)
   val rocket_core = Module(rocket_core_lm.module)
  

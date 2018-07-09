@@ -14,10 +14,17 @@ MK_INCLUDES += $(PACKAGES_DIR)/oc_wb_ip/rtl/wb_uart/fw/wb_uart_fw.mk
 MK_INCLUDES += $(PACKAGES_DIR)/uex/uex.mk
 MK_INCLUDES += $(PACKAGES_DIR)/uex/impl/threading/uth/uex_threading_uth.mk
 MK_INCLUDES += $(PACKAGES_DIR)/uex/impl/threading/uth/riscv/uex_threading_uth_riscv.mk
+#MK_INCLUDES += $(BMK)/src/bmk.mk
+#MK_INCLUDES += $(BMK)/src/impl/context/context.mk
+#MK_INCLUDES += $(BMK)/src/impl/context/ucontext/ucontext.mk
+#MK_INCLUDES += $(BMK)/src/impl/sys/riscv/bmk_riscv.mk
 
-CFLAGS += -march=rv64imafd
+CFLAGS += -march=rv64imafd 
 ASFLAGS += -march=rv64imafd
 CFLAGS += -g
+# CFLAGS += -fPIC
+
+ASFLAGS += -g
 
 # SRC_DIRS += $(ROCKET_SOC)/ve/rocket_soc_uvm/tests/sw
 
@@ -32,11 +39,12 @@ bootrom.build : bootrom/bootrom.img
 	$(Q)touch $@
 	
 	
-app/%.elf : app/%.o $(SW_APP_CORE_LIB) # $(DEVTREE_OBJS)
+app/%.elf : app/%.o $(SW_APP_CORE_LIB) bootrom/bootrom.sym
 	$(Q)echo "build app/$(*).elf from $^"
 #	$(Q)$(CC) -Wl,-T,$(SW_APP_DIR)/app.ld -o $@ $^
-	$(Q)$(CC) -print-file-name=libc.a
-	$(Q)$(LD) -T $(SW_APP_DIR)/app.ld -o $@ $^ $(LIBGCC) $(LIBC)
+#	$(Q)$(CC) -print-file-name=libc.a
+	$(Q)$(LD) -T $(SW_APP_DIR)/app.ld -o $@ \
+		app/$*.o $(SW_APP_CORE_LIB) -R bootrom/bootrom.sym $(LIBGCC) $(LIBC)
 	
 include $(MK_INCLUDES)
 

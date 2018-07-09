@@ -2,7 +2,6 @@
 ROCKET_SOC_UVM_SCRIPTS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 ROCKET_SOC ?= $(abspath $(ROCKET_SOC_UVM_SCRIPTS_DIR)/../../../..)
 
-
 include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
 include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
 include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
@@ -42,7 +41,7 @@ else # Simulation model
 ram.hex : $(BUILD_DIR)/esw/$(SW_IMAGE)
 	$(Q)riscv64-unknown-elf-objcopy $^ -O verilog ram.vlog
 	$(Q)perl $(MEMORY_PRIMITIVES)/bin/objcopyvl2vl.pl \
-		-width 64 -offset 0x80000000 -le ram.vlog $@
+		-width 64 -offset 0x40000000 -le ram.vlog $@
 endif
 else # No software image
 ram.hex :

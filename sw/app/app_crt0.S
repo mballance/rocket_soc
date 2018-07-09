@@ -4,8 +4,18 @@
  *
  ****************************************************************************/
 
+
 #define MEM_BASE 0x80000000
 #define MMIO_BASE 0x60000000
+
+#define TRACEPOINT(x) \
+  li t0, 0x60001000; \
+  li t1, 0x02a5; \
+  sh t1, 0(t0); \
+  li t1, x; \
+  sll t1, t1, 8; \
+  ori t1, t1, 0x05; \
+  sw t1, 0(t0);
 
 // TODO:
 // - Setup new stack
@@ -13,72 +23,68 @@
 //
 // SP=X2 (top-down stack)
 
+.section .data
+lock_word: .word 0
+
 .section .app_crt0, "ax", @progbits
 .globl _app_entry
 _app_entry:
 
-// TODO: save register state onto caller's stack
-  mv  x1, x0
-//  mv  x2, x1 // Don't smash stack from caller
+// Save stack space and store the link address
+addi	sp, sp, -24
+sd		gp, 16(sp)
+sd		ra, 8(sp)
+sd		s0, 0(sp)
+addi	s0, sp, 24
 
-// Setup stack
-  la  x2, _stack_top
-  add x2, x2, -8
-  mv  x3, x1
-  mv  x4, x1
-  mv  x5, x1
-  mv  x6, x1
-  mv  x7, x1
-  mv  x8, x1
-  mv  x9, x1
-  mv x10, x1
-  mv x11, x1
-  mv x12, x1
-  mv x13, x1
-  mv x14, x1
-  mv x15, x1
-  mv x16, x1
-  mv x17, x1
-  mv x18, x1
-  mv x19, x1
-  mv x20, x1
-  mv x21, x1
-  mv x22, x1
-  mv x23, x1
-  mv x24, x1
-  mv x25, x1
-  mv x26, x1
-  mv x27, x1
-  mv x28, x1
-  mv x29, x1
-  mv x30, x1
-  mv x31, x1
+// Initialize the global pointer
+.option push
+.option norelax
+1:auipc	gp, %pcrel_hi(__global_pointer$)
+addi	gp, gp, %pcrel_lo(1b)
+.option pop
 
-  /* clear BSS */
-  la x26, _bss_start
-  la x27, _bss_end
+TRACEPOINT(1000)
+
+//la		t0, lock_word
+//lr.w	t1, (t0)
+//addi	t1, t1, 1
+//sc.w	t0, t1, (t0)
+
+TRACEPOINT(2000)
+  /* clear application's BSS */
+  la t0, __bss_start
+  la t1, _end
 
   bge x26, x27, zero_loop_end
 
 zero_loop:
-  sw x0, 0(x26)
-  addi x26, x26, 4
-  ble x26, x27, zero_loop
+  sw zero, 0(t0)
+  addi t0, t0, 4
+  ble t0, t1, zero_loop
 zero_loop_end:
 
+TRACEPOINT(3000)
 
 /*  jal x1, __libc_init_array */
 /*  call    __libc_init_array */
 
-  /* jump to main program entry point (argc = argv = 0) */
-  addi x10, x0, 0
-  addi x11, x0, 0
-  jal x1, main
+  /* Call the initialization function */
+  jal ra, app_bmk_level0_main
 
+TRACEPOINT(4000)
+
+  // Return back to BMK who will call back the real main
+  nop
+  ld		gp, 16(sp)
+  ld		ra, 8(sp)
+  ld		s0, 8(sp)
+  addi		sp, sp, 24
+  ret
+  nop
+
+TRACEPOINT(5000)
 1:
 	j 1b
-
-  // TODO: Restore previous stack
-  // Jump-return to caller
 
 

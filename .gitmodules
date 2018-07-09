@@ -1,0 +1,64 @@
+[submodule "simscripts"]
+	path = simscripts
+	url = https://github.com/mballance/simscripts.git
+	branch = master
+[submodule "chiselscripts"]
+	path = chiselscripts
+	url = https://github.com/mballance/chiselscripts.git
+	branch = master
+[submodule "utils/dtc"]
+	path = utils/dtc
+	url = https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+	branch = master
+[submodule "subprojects/chisellib"]
+	path = subprojects/chisellib
+	url = https://github.com/mballance/chisellib.git
+	branch = master
+[submodule "subprojects/std_protocol_if"]
+	path = subprojects/std_protocol_if
+	url = https://github.com/mballance/std_protocol_if.git
+	branch = master
+[submodule "subprojects/amba_sys_ip"]
+	path = subprojects/amba_sys_ip
+	url = https://github.com/mballance/amba_sys_ip.git
+	branch = master
+[submodule "subprojects/memory_primitives"]
+	path = subprojects/memory_primitives
+	url = https://github.com/mballance/memory_primitives.git
+	branch = master
+[submodule "subprojects/wb_sys_ip"]
+	path = subprojects/wb_sys_ip
+	url = https://github.com/mballance/wb_sys_ip.git
+	branch = master
+[submodule "synthscripts"]
+	path = synthscripts
+	url = https://github.com/mballance/synthscripts.git
+	branch = master
+[submodule "subprojects/oc_wb_ip"]
+	path = subprojects/oc_wb_ip
+	url = https://github.com/mballance/oc_wb_ip.git
+	branch = master
+[submodule "ve/sv_bfms"]
+	path = ve/sv_bfms
+	url = https://github.com/mballance/sv_bfms.git
+	branch = master
+[submodule "subprojects/rocket-chip"]
+	path = subprojects/rocket-chip
+	url = https://github.com/mballance/rocket-chip.git
+	branch = master
+[submodule "subprojects/vmon"]
+	path = subprojects/vmon
+	url = https://github.com/mballance/vmon.git
+	branch = master
+[submodule "subprojects/uex"]
+	path = subprojects/uex
+	url = https://github.com/mballance/uex.git
+	branch = master
+[submodule "subprojects/googletest_uvm"]
+	path = subprojects/googletest_uvm
+	url = https://github.com/mballance/googletest_uvm.git
+	branch = master
+[submodule "subprojects/bmk"]
+	path = subprojects/bmk
+	url = https://github.com/mballance/bmk.git
+	branch = master
