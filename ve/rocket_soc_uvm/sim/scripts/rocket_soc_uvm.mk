@@ -1,18 +1,20 @@
 
 ROCKET_SOC_UVM_SCRIPTS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+ROCKET_SOC ?= $(abspath $(ROCKET_SOC_UVM_SCRIPTS_DIR)/../../../..)
 
-include $(ROCKET_SOC)/src/rocket_soc.mk
-include $(STD_PROTOCOL_IF)/src/std_protocol_if.mk
-include $(CHISELLIB)/src/chisellib.mk
-include $(WB_SYS_IP)/src/wb_sys_ip.mk
-include $(OC_WB_IP)/src/oc_wb_ip.mk
-include $(OC_WB_IP)/rtl/wb_uart/fw/wb_uart_fw.mk
-include $(AMBA_SYS_IP)/src/amba_sys_ip.mk
-include $(ROCKET_SOC)/chiselscripts/mkfiles/chiselscripts.mk
-include $(ROCKET_SOC)/utils/utils.mk
-include $(ROCKET_SOC)/ve/sv_bfms/src/sv_bfms.mk
-include $(VMON)/src/client/rules_defs.mk
-include $(VMON)/src/client/sv/rules_defs.mk
+
+include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
+include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
+include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
+include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
+include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
+include $(PACKAGES_DIR)/oc_wb_ip/rtl/wb_uart/fw/wb_uart_fw.mk
+include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
+include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
+# include $(ROCKET_SOC)/utils/utils.mk
+include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
+include $(PACKAGES_DIR)/vmon/src/client/vmon_client.mk
+include $(PACKAGES_DIR)/vmon/src/client/sv/vmon_dpi_client.mk
 
 ifneq (1,$(RULES))
 
