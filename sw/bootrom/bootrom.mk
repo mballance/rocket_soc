@@ -1,12 +1,12 @@
 
 BOOTROM_SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-include $(BMK)/src/bmk.mk
-include $(BMK)/src/impl/atomics/riscv/atomics_riscv.mk
-include $(BMK)/src/impl/context/riscv/context_riscv.mk
-include $(BMK)/src/impl/scheduler/simple/scheduler_simple.mk
-include $(BMK)/src/impl/sys/riscv/sys_riscv.mk
-include $(BMK)/src/impl/debug/null/debug_null.mk
+include $(PACKAGES_DIR)/bmk/src/bmk.mk
+include $(PACKAGES_DIR)/bmk/src/impl/atomics/riscv/atomics_riscv.mk
+include $(PACKAGES_DIR)/bmk/src/impl/context/riscv/context_riscv.mk
+include $(PACKAGES_DIR)/bmk/src/impl/scheduler/simple/scheduler_simple.mk
+include $(PACKAGES_DIR)/bmk/src/impl/sys/riscv/sys_riscv.mk
+include $(PACKAGES_DIR)/bmk/src/impl/debug/null/debug_null.mk
 
 ifneq (1,$(RULES))
 
@@ -35,7 +35,7 @@ bootrom/%.bin : bootrom/%.elf
 	
 bootrom/bootrom.elf : $(BOOTROM_OBJS) $(BOOTROM_DEPS)
 	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
-	$(Q)$(LD) -T$(BMK)/src/impl/sys/riscv/bmk_riscv.ld \
+	$(Q)$(LD) -T$(BMK_DIR)/src/impl/sys/riscv/bmk_riscv.ld \
 		$^ -nostdlib -static -no-gcc-sections -o $@
 
 bootrom/bootrom.sym : bootrom/bootrom.elf

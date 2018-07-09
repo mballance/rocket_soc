@@ -3,6 +3,8 @@ ROCKET_SOC_UVM_SCRIPTS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 ROCKET_SOC ?= $(abspath $(ROCKET_SOC_UVM_SCRIPTS_DIR)/../../../..)
 
 include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
+include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
+include $(PACKAGES_DIR)/berkeley-hardfloat/mkfiles/berkeley-hardfloat.mk
 include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
 include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
 include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk

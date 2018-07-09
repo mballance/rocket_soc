@@ -41,11 +41,11 @@ class RocketSocCore(
       new WithBootROMFile(romfile) ++
       new WithNBanksPerMemChannel(2) ++
       new BaseConfig().alter((site,here,up) => {
-        case ExtMem => MasterPortParams(
+        case ExtMem => Some(MasterPortParams(
             base = x"4000_0000",
             size = x"1000_0000",
             beatBytes = site(MemoryBusKey).beatBytes,
-            idBits = 4)
+            idBits = 4))
       }));
   implicit val p = core_cfg.toInstance
  

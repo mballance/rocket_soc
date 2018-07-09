@@ -18,6 +18,7 @@ include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
 include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
 include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
 include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
+include $(PACKAGES_DIR)/vmon/mkfiles/vmon.mk
 include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
 include $(ROCKET_SOC_DIR)/mkfiles/rocket_soc.mk
 

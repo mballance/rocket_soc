@@ -13,7 +13,7 @@ class RocketAxi4Master2Axi4Master(
   require(rocket_axi4_p.dataBits == axi4_p.DATA_WIDTH)
   require(rocket_axi4_p.idBits == axi4_p.ID_WIDTH)
   
-  val reg = Reg(UInt(1.W), init=1.asUInt())
+  val reg = RegInit(UInt(1.W), init=1.asUInt())
   
   val io = IO(new Bundle {
     val rocket_axi4 = Flipped(new AXI4Bundle(rocket_axi4_p))
