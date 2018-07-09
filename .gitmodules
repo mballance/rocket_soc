@@ -58,3 +58,7 @@
 	path = subprojects/googletest_uvm
 	url = https://github.com/mballance/googletest_uvm.git
 	branch = master
+[submodule "subprojects/bmk"]
+	path = subprojects/bmk
+	url = https://github.com/mballance/bmk.git
+	branch = master

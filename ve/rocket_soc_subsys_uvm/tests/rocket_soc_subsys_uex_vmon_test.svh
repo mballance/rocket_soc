@@ -1,6 +1,6 @@
 
 // Receive path for vmon
-class rocket_soc_vmon_m2h implements vmon_m2h_if;
+class rocket_soc_vmon_m2h extends vmon_m2h_if;
 	uart_serial_agent			m_serial_agent;
 
 	function new (uart_serial_agent agent);

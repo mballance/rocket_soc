@@ -1,6 +1,17 @@
 #define DRAM_BASE 0x80000000
 #define APP_ENTRY 0x80001000
 #define MMIO_BASE 0x60000000
+// #include "bmk_config.h"
+
+#define TRACEPOINT(x) \
+  li t0, 0x60001000; \
+  li t1, 0x02a5; \
+  sh t1, 0(t0); \
+  li t1, x; \
+  sll t1, t1, 8; \
+  ori t1, t1, 0x05; \
+  sw t1, 0(t0);
+
 
 .section .text.start, "ax", @progbits
 .globl _start
@@ -53,11 +64,10 @@ _start:
 
   csrr x9, mhartid // HW Thread ID (core)
   bne x9, x0, 2
-  li x3, 0x60000003
-  li x4, 1
+  li a0, 1
+  TRACEPOINT(100)
 1:
-  sb x4, 0(x3)
-  addi x4, x4, 1
+  TRACEPOINT(200)
   j 1b
 
 

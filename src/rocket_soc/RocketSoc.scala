@@ -13,6 +13,7 @@ import freechips.rocketchip.amba.axi4._
 
 import amba_sys_ip.axi4.Axi4WishboneBridge
 import amba_sys_ip.axi4.Axi4Sram
+import vmon.WishboneVmonMonitor
 
 class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   
@@ -29,7 +30,7 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   u_core.io.l2_frontend_bus.tieoff_flipped()
 
   val sram = Module(new Axi4Sram(new Axi4Sram.Parameters(
-      MEM_ADDR_BITS = 12,
+      MEM_ADDR_BITS = 22,
       u_core.mem_p,
       INIT_FILE = "ram.hex")))
   sram.io.s <> u_core.io.mem
@@ -55,7 +56,7 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   val periph_ic = Module(new WishboneInterconnect(
       new WishboneInterconnectParameters(
           N_MASTERS = 1,
-          N_SLAVES = 1,
+          N_SLAVES = 2,
           wb_p = new Wishbone.Parameters(32, 32))
       ))
   mmio_axi4_wb_bridge.io.i <> mmio_width_converter.io.i
@@ -68,6 +69,15 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   periph_ic.io.addr_limit(0) := 0x60000fff.asUInt()
   u_uart.io.t <> periph_ic.io.s(0)
   io.uart0 <> u_uart.io.s
+ 
+  // Dummy target for use by the trickbox
+  val u_sp = Module(new WishboneDummySlave())
+  periph_ic.io.addr_base(1) := 0x60001000.asUInt()
+  periph_ic.io.addr_limit(1) := 0x60001fff.asUInt()
+  u_sp.io.s <> periph_ic.io.s(1)
+  
+//  val u_vmon_monitor = Module(new WishboneVmonMonitor(new Wishbone.Parameters(32,32)))
+//  u_vmon_monitor.io.m := u_sp.io.s
   
 }
 

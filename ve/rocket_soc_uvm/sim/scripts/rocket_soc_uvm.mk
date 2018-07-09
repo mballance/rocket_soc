@@ -11,8 +11,8 @@ include $(AMBA_SYS_IP)/src/amba_sys_ip.mk
 include $(ROCKET_SOC)/chiselscripts/mkfiles/chiselscripts.mk
 include $(ROCKET_SOC)/utils/utils.mk
 include $(ROCKET_SOC)/ve/sv_bfms/src/sv_bfms.mk
-include $(VMON)/src/client/rules_defs.mk
-include $(VMON)/src/client/sv/rules_defs.mk
+include $(VMON)/src/client/vmon_client.mk
+include $(VMON)/src/client/sv/vmon_dpi_client.mk
 
 ifneq (1,$(RULES))
 
@@ -40,7 +40,7 @@ else # Simulation model
 ram.hex : $(BUILD_DIR)/esw/$(SW_IMAGE)
 	$(Q)riscv64-unknown-elf-objcopy $^ -O verilog ram.vlog
 	$(Q)perl $(MEMORY_PRIMITIVES)/bin/objcopyvl2vl.pl \
-		-width 64 -offset 0x80000000 -le ram.vlog $@
+		-width 64 -offset 0x40000000 -le ram.vlog $@
 endif
 else # No software image
 ram.hex :

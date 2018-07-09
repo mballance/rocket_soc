@@ -59,6 +59,28 @@ module RocketSocTBHdl;
 	
 	RocketSocTB tb(.clock(clock), .reset(reset));
 	
+	wire [31:0]		ADR = tb.u_dut.periph_ic.io_m_0_req_ADR;
+	wire [31:0]		DAT_W = tb.u_dut.periph_ic.io_m_0_req_DAT_W;
+	wire 			CYC = tb.u_dut.periph_ic.io_m_0_req_CYC;
+	wire 			ERR = 0; // tb.u_dut.periph_ic.io_m_0_req_ERR;
+	wire [3:0]		SEL = tb.u_dut.periph_ic.io_m_0_req_SEL;
+	wire 			ACK = tb.u_dut.periph_ic.io_m_0_rsp_ACK;
+	wire 			WE = tb.u_dut.periph_ic.io_m_0_req_WE;
+	wire 			STB = tb.u_dut.periph_ic.io_m_0_req_STB;
+
+	wb_vmon_monitor #(32,32) u_vmon_monitor(
+			.clk_i(clock),
+			.rst_i(reset),
+			.ADR(ADR),
+			.DAT_W(DAT_W),
+			.CYC(CYC),
+			.ERR(ERR),
+			.SEL(SEL),
+			.ACK(ACK),
+			.STB(STB),
+			.WE(WE)
+		);
+	
 //	import uvm_pkg::uvm_config_db;
 
 //	initial begin

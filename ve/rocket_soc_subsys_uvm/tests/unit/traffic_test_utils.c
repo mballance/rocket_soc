@@ -73,19 +73,27 @@ static int core_run(void *ud) {
 }
 
 void run_false_share(void *addr, uint32_t line_off, uint32_t num_iterations) {
-	uint32_t i;
+	uint32_t i, j;
 	uint32_t *ptr = (uint32_t *)addr;
 
-	for (i=0; i<num_iterations; i++) {
-		uint32_t rdata;
-		uex_iowrite32((i+1), &ptr[line_off]);
-		rdata = uex_ioread32(&ptr[line_off]);
+	fprintf(stdout, "%lld: --> run_false_share: %p line_off=%d num_iterations=%d\n",
+			uex_get_time_ns(), addr, line_off, num_iterations);
 
-		if (rdata != i+1) {
-			fprintf(stdout, "run_false_share: Read-back error 0x%08x != 0x%08x\n",
-					rdata, (i+1));
+	for (i=0; i<num_iterations; i++) {
+		for (j=0; j<100; j++) {
+			uint32_t rdata;
+			uex_iowrite32((j+i*100+1), &ptr[line_off]);
+			rdata = uex_ioread32(&ptr[line_off]);
+
+			if (rdata != (j+i*100+1)) {
+				fprintf(stdout, "run_false_share: Read-back error 0x%08x != 0x%08x\n",
+						rdata, (j+i*100+1));
+			}
 		}
 	}
+
+	fprintf(stdout, "%lld: <-- run_false_share: %p line_off=%d num_iterations=%d\n",
+			uex_get_time_ns(), addr, line_off, num_iterations);
 }
 
 typedef struct false_share_data_s {
@@ -101,14 +109,14 @@ void run_false_share_c(closure_base_t *ud) {
 	run_false_share(data->addr, data->line_off, data->num_iterations);
 }
 
-void queue_false_share(uint8_t core, void *addr, uint32_t line_off, uint32_t num_iterations) {
+void queue_false_share(uint8_t core, uint64_t addr, uint32_t line_off, uint32_t num_iterations) {
 	false_share_data_t *data;
 
 	scenario_data.cores[core] = alloc_closure(scenario_data.cores[core]);
 	data = (false_share_data_t *)scenario_data.cores[core];
 
 	data->base.func = &run_false_share_c;
-	data->addr = addr;
+	data->addr = (void *)addr;
 	data->line_off = line_off;
 	data->num_iterations = num_iterations;
 }
@@ -126,7 +134,8 @@ static void run_true_share(
 		uint8_t *dst_ready) {
 	uint32_t *addr_p = (uint32_t *)addr;
 
-	fprintf(stdout, "run_true_share: my_role=%d\n", role);
+	fprintf(stdout, "%lld: --> run_true_share: %p size=%d num_iterations=%d role=%d\n",
+			uex_get_time_ns(), addr, size, num_iterations, role);
 
 	if (role == 0) {
 		// I'm the data sender
@@ -155,7 +164,7 @@ static void run_true_share(
 				uint32_t rdata;
 				rdata = uex_ioread32(&addr_p[i]);
 
-				if (rdata != (n+i+1)) {
+				if (rdata != (n+i+2)) {
 					fprintf(stdout, "Error: read-back %p = %d\n",
 							&addr_p[i], rdata);
 				}
@@ -174,9 +183,12 @@ static void run_true_share(
 			*src_ready = 0; // got the message
 			uex_mutex_unlock(pp_mutex1);
 
-			// Read all the data back
+			// Read all the data back and write
+			// new data to the block
 			for (uint32_t i=0; i<size; i++) {
-				uex_ioread32(&addr_p[i]);
+				uex_iowrite32(
+						uex_ioread32(&addr_p[i])+1,
+						&addr_p[i]);
 			}
 
 			// Send an ack to the writer
@@ -190,6 +202,8 @@ static void run_true_share(
 		fprintf(stdout, "FATAL: unknown role %d\n", role);
 	}
 
+	fprintf(stdout, "%lld: <-- run_true_share: %p size=%d num_iterations=%d role=%d\n",
+			uex_get_time_ns(), addr, size, num_iterations, role);
 }
 
 typedef struct true_share_msg_data_s {
@@ -214,8 +228,6 @@ typedef struct true_share_data_s {
 static void run_true_share_c(closure_base_t *ud) {
 	true_share_data_t *data = (true_share_data_t *)ud;
 
-	fprintf(stdout, "run_true_share_c: p=%p role=%d\n", data, data->role);
-
 	run_true_share(
 			data->addr,
 			data->size,
@@ -232,7 +244,7 @@ static void run_true_share_c(closure_base_t *ud) {
 void queue_true_share(
 		uint8_t 		core,
 		uint8_t 		pair_core,
-		void			*addr,
+		uint64_t		addr,
 		uint32_t		size,
 		uint32_t		num_iterations) {
 	true_share_data_t *data1;
@@ -245,7 +257,7 @@ void queue_true_share(
 	data1->base.func = &run_true_share_c;
 	data2->base.func = &run_true_share_c;
 
-	data1->addr = data2->addr = addr;
+	data1->addr = data2->addr = (void *)addr;
 	data1->size = data2->size = size;
 	data1->num_iterations = data2->num_iterations = num_iterations;
 	data1->msg_data_p = &data1->msg_data;
@@ -261,14 +273,123 @@ void queue_true_share(
 
 	data1->msg_data.src_ready = 0;
 	data1->msg_data.dst_ready = 0;
-
-	fprintf(stdout, "queue_true_share: role0=%d role1=%d p0=%p p1=%p\n",
-			data1->role, data2->role, data1, data2);
 }
 
-void launch(void) {
+typedef struct fill_data_s {
+	closure_base_t		base;
+	void				*addr;
+	uint32_t			size;
+	uint32_t			num_iterations;
+} fill_data_t;
+
+static void run_fill_data(
+		void		*addr,
+		uint32_t	size,
+		uint32_t	num_iterations) {
+	uint32_t i, j;
+	uint32_t *addr_w = (uint32_t *)addr;
+
+	fprintf(stdout, "%lld: --> run_fill_data: %p size=%d num_iterations=%d\n",
+			uex_get_time_ns(), addr, size, num_iterations);
+
+	for (i=0; i<num_iterations; i++) {
+		for (j=0; j<size; j++) {
+			uint32_t rdata = 0;
+			rdata = uex_ioread32(&addr_w[j]);
+			rdata ^= 0xFFFFFFFF;
+			rdata += (i+1);
+			uex_iowrite32(rdata, &addr_w[j]);
+		}
+	}
+
+	fprintf(stdout, "%lld: <-- run_fill_data: %p size=%d num_iterations=%d\n",
+			uex_get_time_ns(), addr, size, num_iterations);
+}
+
+static void run_fill_data_c(closure_base_t *ud) {
+	fill_data_t *data = (fill_data_t *)ud;
+
+	run_fill_data(
+			data->addr,
+			data->size,
+			data->num_iterations);
+}
+
+void queue_fill_data(
+		uint8_t		core,
+		uint64_t	addr,
+		uint32_t	size,
+		uint32_t	num_iterations) {
+	fill_data_t *data;
+	scenario_data.cores[core] = alloc_closure(scenario_data.cores[core]);
+	data = (fill_data_t *)scenario_data.cores[core];
+
+	data->base.func = &run_fill_data_c;
+	data->addr = (void *)addr;
+	data->size = size;
+	data->num_iterations = num_iterations;
+}
+
+typedef struct accum_data_s {
+	closure_base_t		base;
+	void				*addr;
+	uint32_t			size;
+	uint32_t			num_iterations;
+} accum_data_t;
+
+void run_read_accum(
+		void		*addr,
+		uint32_t	size,
+		uint32_t	num_iterations) {
+	uint32_t i, j;
+	uint32_t *addr_w = (uint32_t *)addr;
+
+	fprintf(stdout, "%lld: --> run_read_accum: %p size=%d num_iterations=%d\n",
+			uex_get_time_ns(), addr, size, num_iterations);
+
+	for (i=0; i<num_iterations; i++) {
+		uint32_t rdata = 0;
+		for (j=0; j<size; j++) {
+			rdata += uex_ioread32(&addr_w[j]);
+
+			if (j+1 == size) {
+				uex_iowrite32(rdata, &addr_w[j]);
+			}
+		}
+	}
+
+	fprintf(stdout, "%lld: <-- run_read_accum: %p size=%d num_iterations=%d\n",
+			uex_get_time_ns(), addr, size, num_iterations);
+}
+
+static void run_read_accum_c(closure_base_t *ud) {
+	accum_data_t *data = (accum_data_t *)ud;
+
+	run_read_accum(
+			data->addr,
+			data->size,
+			data->num_iterations);
+}
+
+void queue_read_accum(
+		uint8_t		core,
+		uint64_t	addr,
+		uint32_t	size,
+		uint32_t	num_iterations) {
+	accum_data_t *data;
+	scenario_data.cores[core] = alloc_closure(scenario_data.cores[core]);
+	data = (accum_data_t *)scenario_data.cores[core];
+
+	data->base.func = &run_read_accum_c;
+	data->addr = (void *)addr;
+	data->size = size;
+	data->num_iterations = num_iterations;
+}
+
+void launch_traffic(void) {
 	int i;
 
+	fprintf(stdout, "%lld: ========== Scenario Start ============\n", uex_get_time_ns());
 	for (i=0; i<MAX_CORES; i++) {
 		if (scenario_data.cores[i]) {
 			uex_cpu_set_t cpuset;
@@ -284,6 +405,8 @@ void launch(void) {
 			uex_thread_join(scenario_data.threads[i]);
 		}
 	}
+
+	fprintf(stdout, "%lld: ========== Scenario End ==============\n", uex_get_time_ns());
 
 	// Finally, reset everything
 	memset(&scenario_data, 0, sizeof(scenario_data_t));

@@ -1,14 +1,26 @@
 
 BOOTROM_SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
+include $(BMK)/src/bmk.mk
+include $(BMK)/src/impl/atomics/riscv/atomics_riscv.mk
+include $(BMK)/src/impl/context/riscv/context_riscv.mk
+include $(BMK)/src/impl/scheduler/simple/scheduler_simple.mk
+include $(BMK)/src/impl/sys/riscv/sys_riscv.mk
+include $(BMK)/src/impl/debug/null/debug_null.mk
+
 ifneq (1,$(RULES))
 
 SRC_DIRS += $(BOOTROM_SRC_DIR)
 
 DEVTREE_OBJS=rocket_soc_uex_devtree.o
 
-BOOTROM_OBJS=bootrom/bootrom.o bootrom/bootrom_main.o 
-BOOTROM_DEPS=libvmon_monitor.o
+
+#BOOTROM_OBJS=bootrom/bootrom.o bootrom/bootrom_main.o 
+#BOOTROM_DEPS=libvmon_monitor.o
+
+# BOOTROM_OBJS=libbmk_riscv.o libbmk.o
+# BOOTROM_OBJS=bootrom.o bootrom_main.o
+BOOTROM_OBJS=$(BMK_DEPS) libvmon_monitor.o bootrom_main.o
 
 else # Rules
 
@@ -23,8 +35,13 @@ bootrom/%.bin : bootrom/%.elf
 	
 bootrom/bootrom.elf : $(BOOTROM_OBJS) $(BOOTROM_DEPS)
 	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
-	$(Q)$(LD) -T$(BOOTROM_SRC_DIR)/bootrom.ld $^ -nostdlib -static -no-gcc-sections -o $@
-	
+	$(Q)$(LD) -T$(BMK)/src/impl/sys/riscv/bmk_riscv.ld \
+		$^ -nostdlib -static -no-gcc-sections -o $@
+
+bootrom/bootrom.sym : bootrom/bootrom.elf
+	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
+	$(Q)$(NM) bootrom/bootrom.elf | grep ' T ' | grep -v 'T _' | sed -e 's/\([0-9a-f][0-9a-f]*\) T \([a-zA-Z][a-zA-Z0-9_]*\)/\2 = 0x\1;/g' > $@
+
 bootrom/%.o : %.c
 	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
 	$(Q)$(CC) -c $(CFLAGS) -o $@ $^

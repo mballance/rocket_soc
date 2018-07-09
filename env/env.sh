@@ -17,6 +17,7 @@ export MEMORY_PRIMITIVES=$ROCKET_SOC/subprojects/memory_primitives
 export CHISELLIB=$ROCKET_SOC/subprojects/chisellib
 export SV_BFMS=$ROCKET_SOC/ve/sv_bfms
 export UEX=$ROCKET_SOC/subprojects/uex
+export BMK=$ROCKET_SOC/subprojects/bmk
 export VMON=$ROCKET_SOC/subprojects/vmon
 
 #export SV_BFMS=$WB_SYS_IP/ve/sv_bfms
