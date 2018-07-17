@@ -20,7 +20,7 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
     val uart0 = new UartIf
   });
  
-  val u_core = Module(new RocketSocCore(4, soc_p.romfile))
+  val u_core = Module(new RocketSocCore(soc_p.ncores, soc_p.romfile))
  
  
   // We're not using the debug interface
@@ -83,7 +83,8 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
 
 object RocketSoc {
   class Parameters(
-      val romfile : String = "/bootrom/bootrom.img"
+      val romfile : String = "/bootrom/bootrom.img",
+      val ncores : Int = 4
       ) { }
 }
 

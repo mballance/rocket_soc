@@ -12,6 +12,7 @@ import chisel3.ChiselExecutionSuccess
 object RocketSocTBGen extends App {
   val plusargs = new Plusargs(args)
   val romfile = plusargs.plusarg("BOOTROM_DIR", ".") + "/bootrom/bootrom.img"
+  val ncores = plusargs.plusarg("NCORES", 1)
 
 //  val c = chisel3.Driver.elaborate(() => new RocketSoc(
 //      new RocketSoc.Parameters(
@@ -28,7 +29,8 @@ object RocketSocTBGen extends App {
   
   chisel3.Driver.execute(plusargs.nonplusargs, () => new RocketSocTB(
       new RocketSoc.Parameters(
-          romfile = romfile
+          romfile = romfile,
+          ncores = ncores
           )
       )
   ) match {
