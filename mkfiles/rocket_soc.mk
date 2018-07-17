@@ -2,6 +2,11 @@
 ROCKET_SOC_MKFILES_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 ROCKET_SOC_DIR := $(abspath $(ROCKET_SOC_MKFILES_DIR)/..)
 
+ROCKET_SOC := $(ROCKET_SOC_DIR)
+
+ROCKET_SOC_NCORES ?= 1
+export ROCKET_SOC
+
 ifneq (1,$(RULES))
 
 ROCKET_SOC_JAR := $(ROCKET_SOC_DIR)/lib/rocket_soc.jar
@@ -35,6 +40,7 @@ $(ROCKET_SOC_GEN_TB_SRC) : $(ROCKET_SOC_JARS)
 	$(Q)export PATH="$(PACKAGES_DIR)/ivpm-dtc/linux_x86_64:$(PATH)" ; $(DO_CHISELG) \
 		-outdir RocketSocTB \
 		rocket_soc.ve.RocketSocTBGen \
-		+BOOTROM_DIR=$(BUILD_DIR_A)/esw
+		+BOOTROM_DIR=$(BUILD_DIR_A)/esw \
+		+NCORES=$(ROCKET_SOC_NCORES)
 
 endif
