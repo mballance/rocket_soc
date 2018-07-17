@@ -12,6 +12,7 @@ include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
 include $(PACKAGES_DIR)/oc_wb_ip/rtl/wb_uart/fw/wb_uart_fw.mk
 include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
 include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
+include $(PACKAGES_DIR)/memory_primitives/mkfiles/memory_primitives.mk
 # include $(ROCKET_SOC)/utils/utils.mk
 include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
 include $(PACKAGES_DIR)/vmon/src/client/vmon_client.mk
@@ -30,8 +31,8 @@ RUN_PRE_TARGETS += ram.hex
 
 else # Rules
 
-$(ROCKET_SOC_GEN_TB_SRC) : bootrom.build
-rocket_soc_uvm.mk : bootrom.build
+$(ROCKET_SOC_GEN_TB_SRC) : esw/bootrom.build
+rocket_soc_uvm.mk : esw/bootrom.build
 
 ifneq (,$(SW_IMAGE))
 ifeq (true,$(USE_ALTLIB))
@@ -60,7 +61,7 @@ ram.hex :
 	echo "0000000000000000" >> $@
 endif
 
-bootrom.build : embedded_sw
+esw/bootrom.build : embedded_sw
 
 embedded_sw :
 	echo "SW_IMAGES=$(SW_IMAGES)"

@@ -23,9 +23,6 @@ ROCKET_SOC_GEN_TB_SRC := RocketSocTB/RocketSocTB.f
 
 else # Rules
 	
-#$(ROCKET_SOC_JAR) : $(ROCKET_SOC_SRC) $(ROCKET_SOC_DEPS)
-#	$(Q)$(DO_CHISELC)
-
 $(ROCKET_SOC_GEN_SRC) : $(ROCKET_SOC_JARS) 
 	$(Q)$(DO_CHISELG) rocket_soc.RocketSocGen +BOOTROM_DIR=$(BUILD_DIR_A)
 #	$(Q)$(CHISELG) $(foreach l,$(ROCKET_SOC_LIBS),-L$(l)) \
