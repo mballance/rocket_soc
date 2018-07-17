@@ -68,7 +68,10 @@ module RocketSocTBHdl;
 	wire 			WE = tb.u_dut.periph_ic.io_m_0_req_WE;
 	wire 			STB = tb.u_dut.periph_ic.io_m_0_req_STB;
 
-	wb_vmon_monitor #(32,32) u_vmon_monitor(
+	wb_vmon_monitor #(
+			.WB_ADDR_WIDTH(32),
+			.WB_DATA_WIDTH(32),
+			.ADDRESS('h6000_1000)) u_vmon_monitor(
 			.clk_i(clock),
 			.rst_i(reset),
 			.ADR(ADR),

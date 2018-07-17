@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="packages/sv_bfms/src"/>
+	<classpathentry kind="src" path="packages/std_protocol_if/src"/>
+	<classpathentry kind="src" path="packages/wb_sys_ip/src"/>
 	<classpathentry kind="src" path="packages/amba_sys_ip/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
@@ -11,9 +14,6 @@
 	<classpathentry kind="lib" path="packages/rocket-chip/lib/rocket-chip.jar"/>
 	<classpathentry kind="lib" path="packages/amba_sys_ip/lib/amba_sys_ip_lib.jar"/>
 	<classpathentry kind="lib" path="packages/oc_wb_ip/lib/oc_wb_ip.jar"/>
-	<classpathentry kind="lib" path="packages/std_protocol_if/lib/std_protocol_if.jar"/>
 	<classpathentry kind="lib" path="packages/chisellib/lib/chisellib.jar"/>
-	<classpathentry kind="lib" path="packages/wb_sys_ip/lib/wb_sys_ip_lib.jar"/>
-	<classpathentry kind="lib" path="packages/sv_bfms/lib/sv_bfms.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

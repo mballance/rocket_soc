@@ -35,7 +35,7 @@ RULES := 1
 all : bootrom.build 
 
 bootrom.build : bootrom/bootrom.img
-	$(Q)rm -f ExampleRocketTop.v
+	$(Q)echo "touch bootrom.build"
 	$(Q)touch $@
 	
 	

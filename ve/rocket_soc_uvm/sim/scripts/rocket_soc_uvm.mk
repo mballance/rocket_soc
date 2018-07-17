@@ -2,19 +2,20 @@
 ROCKET_SOC_UVM_SCRIPTS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 ROCKET_SOC ?= $(abspath $(ROCKET_SOC_UVM_SCRIPTS_DIR)/../../../..)
 
-# include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
-include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
-include $(PACKAGES_DIR)/berkeley-hardfloat/mkfiles/berkeley-hardfloat.mk
-include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
-include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
-include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
-include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
-include $(PACKAGES_DIR)/oc_wb_ip/rtl/wb_uart/fw/wb_uart_fw.mk
-include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
-include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
-include $(PACKAGES_DIR)/memory_primitives/mkfiles/memory_primitives.mk
+include $(PACKAGES_DIR)/packages.mk
+include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
+#include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
+#include $(PACKAGES_DIR)/berkeley-hardfloat/mkfiles/berkeley-hardfloat.mk
+#include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
+#include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
+#include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
+#include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
+#include $(PACKAGES_DIR)/oc_wb_ip/rtl/wb_uart/fw/wb_uart_fw.mk
+#include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
+#include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
+#include $(PACKAGES_DIR)/memory_primitives/mkfiles/memory_primitives.mk
 # include $(ROCKET_SOC)/utils/utils.mk
-include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
+#include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
 include $(PACKAGES_DIR)/vmon/src/client/vmon_client.mk
 include $(PACKAGES_DIR)/vmon/src/client/sv/vmon_dpi_client.mk
 
@@ -64,6 +65,7 @@ endif
 esw/bootrom.build : embedded_sw
 
 embedded_sw :
+	echo "ROCKET_SOC_GEN_TB_SRC=$(ROCKET_SOC_GEN_TB_SRC)"
 	echo "SW_IMAGES=$(SW_IMAGES)"
 	if test ! -d esw; then mkdir -p esw; fi
 	$(Q)$(MAKE) -C esw VERBOSE=$(VERBOSE) PACKAGES_DIR=$(PACKAGES_DIR) \

@@ -86,11 +86,14 @@ def write_packages_mk(
         packages_mk, 
         project,
         package_deps):
+  packages_dir = os.path.dirname(packages_mk)
   
   fh = open(packages_mk, "w")
   fh.write("#********************************************************************\n");
   fh.write("# packages.mk for " + project + "\n");
   fh.write("#********************************************************************\n");
+  fh.write("\n");
+  fh.write("PACKAGES_DIR := $(dir $(lastword $(MAKEFILE_LIST)))\n")
   fh.write("\n");
   fh.write("ifneq (1,$(RULES))\n");
   fh.write("package_deps = " + project + "\n")
@@ -105,6 +108,9 @@ def write_packages_mk(
           fh.write("clean_" + d + " ")
       fh.write("\n")
 
+      if os.path.isfile(packages_dir + "/" + p + "/mkfiles/" + p + ".mk"):
+        fh.write("include $(PACKAGES_DIR)/" + p + "/mkfiles/" + p + ".mk\n")
+
   fh.write("else # Rules\n");
   for p in package_deps.keys():
       info = package_deps[p]
@@ -118,6 +124,9 @@ def write_packages_mk(
       if info.is_src:
           fh.write("\t$(Q)$(MAKE) PACKAGES_DIR=$(PACKAGES_DIR) PHASE2=true -C $(PACKAGES_DIR)/" + p + "/scripts -f ivpm.mk clean\n")
       fh.write("\n");
+
+      if os.path.isfile(packages_dir + "/" + p + "/mkfiles/" + p + ".mk"):
+        fh.write("include $(PACKAGES_DIR)/" + p + "/mkfiles/" + p + ".mk\n")
 
   fh.write("\n")
   fh.write("endif\n");
