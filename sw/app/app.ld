@@ -8,12 +8,12 @@ OUTPUT_ARCH(riscv)
 MEMORY
 {
 	/* 8m */
-	ram(rwx) : ORIGIN = 0x40000000, LENGTH = 0x01000000
+	ram(rwx) : ORIGIN = 0x40001000, LENGTH = 0x01000000
 }
 ENTRY(_app_entry)
 SECTIONS
 {
-  . = 0x40001000;
+/*  . = 0x40001000; */
   .text           :
   {
 	*(.app_crt0)

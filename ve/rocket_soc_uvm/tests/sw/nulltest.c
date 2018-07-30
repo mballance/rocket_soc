@@ -1,8 +1,13 @@
 #include <stdio.h>
+#include "vmon_monitor.h"
 
 // #include "rocket_soc_uex_devtree.h"
 
-int main(int argc, char **argv) {
+int main(void) {
+
+	vmon_monitor_tracepoint(30000);
+
+	vmon_monitor_msg("Hello from nulltest");
 
 //	rocket_soc_devtree_init();
 

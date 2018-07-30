@@ -1,9 +1,9 @@
 
 ROCKET_SOC_UVM_SCRIPTS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-ROCKET_SOC ?= $(abspath $(ROCKET_SOC_UVM_SCRIPTS_DIR)/../../../..)
+# ROCKET_SOC ?= $(abspath $(ROCKET_SOC_UVM_SCRIPTS_DIR)/../../../..)
 
 include $(PACKAGES_DIR)/packages.mk
-include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
+#include $(ROCKET_SOC)/mkfiles/rocket_soc.mk
 #include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
 #include $(PACKAGES_DIR)/berkeley-hardfloat/mkfiles/berkeley-hardfloat.mk
 #include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
@@ -66,6 +66,7 @@ esw/bootrom.build : embedded_sw
 
 embedded_sw :
 	echo "ROCKET_SOC_GEN_TB_SRC=$(ROCKET_SOC_GEN_TB_SRC)"
+	echo "BUILD_PRECOMPILE_TARGETS=$(BUILD_PRECOMPILE_TARGETS)"
 	echo "SW_IMAGES=$(SW_IMAGES)"
 	if test ! -d esw; then mkdir -p esw; fi
 	$(Q)$(MAKE) -C esw VERBOSE=$(VERBOSE) PACKAGES_DIR=$(PACKAGES_DIR) \
