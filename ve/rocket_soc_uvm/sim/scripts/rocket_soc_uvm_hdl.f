@@ -1,7 +1,5 @@
 
 
--f ${STD_PROTOCOL_IF}/rtl/axi4/axi4.f
-
 ${BUILD_DIR_A}/plusarg_reader.v
 ${BUILD_DIR_A}/AsyncResetReg.v
 // ${ROCKET_SOC}/subprojects/rocket-chip/vsrc/ClockDivider2.v

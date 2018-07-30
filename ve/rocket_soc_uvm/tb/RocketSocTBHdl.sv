@@ -3,43 +3,21 @@
  ****************************************************************************/
 //`timescale 1ns/1ns
 
-module RocketSocTBClkGen(output clock, output reset);
-	reg clock_r = 0;
-	reg reset_r = 1;
-	parameter reset_cnt = 100;
-	
-	assign clock = clock_r;
-	assign reset = reset_r;
-	
-	initial begin
-		repeat (reset_cnt*2) begin
-			#10ns;
-			clock_r <= ~clock_r;
-		end
-		
-		reset_r <= 0;
-		
-		forever begin
-			#10ns;
-			clock_r <= ~clock_r;
-		end
-	end	
-endmodule
-
 /**
  * Module: RocketSocTBHdl
  * 
  * TODO: Add module documentation
  */
-module RocketSocTBHdl;
-	reg      clock_r = 0;
+module RocketSocTBHdl(input clock);
 	reg      reset_r = 1;
 	reg[7:0] reset_cnt_r = 0;
 	parameter reset_cnt = 100;
+	wire	 reset = reset_r;
+`ifdef HAVE_HDL_CLOCK_GENERATOR
+	reg      clock_r = 0;
 	parameter clk_period = 10;
 	
 	assign clock = clock_r;
-	assign reset = reset_r;
 
 	// tbx clkgen inactive_negedge
 	initial begin
@@ -47,6 +25,7 @@ module RocketSocTBHdl;
 		forever 
 			#10ns clock_r = ~clock_r;
 	end	
+`endif /* HAVE_HDL_CLOCK_GENERATOR */
 	
 	always @(posedge clock) begin
 		if (reset_cnt_r == reset_cnt) begin
