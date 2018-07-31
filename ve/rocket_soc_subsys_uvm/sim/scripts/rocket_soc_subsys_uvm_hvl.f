@@ -9,7 +9,7 @@
 ${SV_BFMS}/hella_cache_master/hella_cache_master_api_pkg.sv
 ${SV_BFMS}/hella_cache_master/uvm/hella_cache_master_agent_pkg.sv
 
-${ROCKET_SOC}/subprojects/googletest_uvm/src/googletest_uvm_pkg.sv
+${GOOGLETEST_UVM}/src/googletest_uvm_pkg.sv
 
 -f ${ROCKET_SOC}/ve/rocket_soc_uvm/sim/scripts/rocket_soc_uvm_hvl.f
 

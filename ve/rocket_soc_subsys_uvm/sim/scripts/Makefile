@@ -1,4 +1,5 @@
 
+include $(PACKAGES_DIR)/packages.mk
 include $(SIMSCRIPTS_DIR)/mkfiles/plusargs.mk
 
 TIMEOUT := 100us

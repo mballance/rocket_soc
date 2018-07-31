@@ -11,15 +11,15 @@ LIB_DIR = $(ROCKET_SOC_DIR)/lib
 include $(ROCKET_SOC_DIR)/etc/ivpm.info
 
 # include $(CHISELLIB_DIR)/src/chisellib.mk
-include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
-include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
-include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
-include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
-include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
-include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
-include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
-include $(PACKAGES_DIR)/vmon/mkfiles/vmon.mk
-include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
+#include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
+#include $(PACKAGES_DIR)/chisellib/mkfiles/chisellib.mk
+#include $(PACKAGES_DIR)/std_protocol_if/mkfiles/std_protocol_if.mk
+#include $(PACKAGES_DIR)/oc_wb_ip/mkfiles/oc_wb_ip.mk
+#include $(PACKAGES_DIR)/wb_sys_ip/mkfiles/wb_sys_ip.mk
+#include $(PACKAGES_DIR)/amba_sys_ip/mkfiles/amba_sys_ip.mk
+#include $(PACKAGES_DIR)/sv_bfms/mkfiles/sv_bfms.mk
+#include $(PACKAGES_DIR)/vmon/mkfiles/vmon.mk
+#include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
 include $(ROCKET_SOC_DIR)/mkfiles/rocket_soc.mk
 
 ROCKET_SOC_SRC := \
@@ -60,8 +60,8 @@ release : build
 		tar czf chisellib-$(version).tar.gz chisellib
 	$(Q)rm -rf $(CHISELLIB_DIR)/build/chisellib
 
-include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
-include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
-include $(ROCKET_SOC_DIR)/mkfiles/rocket_soc.mk
+#include $(PACKAGES_DIR)/chiselscripts/mkfiles/chiselscripts.mk
+#include $(PACKAGES_DIR)/rocket-chip/mkfiles/rocket-chip.mk
+#include $(ROCKET_SOC_DIR)/mkfiles/rocket_soc.mk
 -include $(PACKAGES_DIR)/packages.mk
 

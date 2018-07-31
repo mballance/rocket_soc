@@ -8,55 +8,6 @@
 //#include "wb_uart_regs.h"
 //#include "rocket_soc_memmap.h"
 
-#ifdef UNDEFINED
-static vmon_monitor_t prv_vmon;
-
-static int32_t vmon_h2m_uart(void *ud, uint8_t *data, uint32_t len) {
-	volatile wb_uart_regs_t *regs = (volatile wb_uart_regs_t *)ROCKET_SOC_UART0_BASE;
-
-	while ((regs->lsr & 0x01) == 0) {
-		;
-	}
-
-    data[0] = regs->rbr;
-
-    return 1;
-}
-static int32_t vmon_m2h_uart(void *ud, uint8_t *data, uint32_t len) {
-	volatile wb_uart_regs_t *regs = (volatile wb_uart_regs_t *)ROCKET_SOC_UART0_BASE;
-
-	while ((regs->lsr & 0x40) == 0) {
-		;
-	}
-
-	regs->thr = *data;
-
-    return 1;
-}
-
-void *memset(void *s, int c, size_t sz) {
-	uint8_t *p = (uint8_t *)s;
-
-	while (sz > 0) {
-		*p++ = c;
-		sz--;
-	}
-
-	return s;
-}
-
-size_t strlen(const char *s) {
-	size_t ret = 0;
-
-	while (*s) {
-		ret++;
-		s++;
-	}
-
-	return ret;
-}
-#endif
-
 void bootrom_main(uint32_t hartid) {
 #ifdef UNDEFINED
 	volatile wb_uart_regs_t *regs = (volatile wb_uart_regs_t *)ROCKET_SOC_UART0_BASE;
@@ -76,6 +27,7 @@ void bootrom_main(uint32_t hartid) {
 #endif
 }
 
+// Implementation for vmon atomics
 void vmon_monitor_atomic_init(unsigned int *l) {
 	bmk_atomics_init((bmk_atomic_t *)l);
 }
@@ -88,7 +40,8 @@ void vmon_monitor_atomic_unlock(unsigned int *l) {
 	bmk_atomics_unlock((bmk_atomic_t *)l);
 }
 
-int32_t bootrom_main_m2h(void *ud, uint8_t *data, uint32_t sz) {
+// bootrom function for sending vmon data to the testbench
+static int32_t bootrom_main_m2h(void *ud, uint8_t *data, uint32_t sz) {
 
 	switch (sz) {
 	case 1: *((uint8_t *)0x60001000) = data[0]; break;
@@ -118,7 +71,7 @@ void bmk_core0_init(void) {
 	vmon_monitor_msg("Hello World!\n");
 
 	// Set the entry point for the RAM application
-	bmk_set_level0_main_func((bmk_main_f)0x40000000);
+	bmk_set_level0_main_func((bmk_main_f)0x40001000);
 }
 
 

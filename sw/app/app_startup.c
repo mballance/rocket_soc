@@ -6,10 +6,15 @@
  */
 #include "bmk.h"
 #include "vmon_monitor.h"
-// #include <stdlib.h>
+#include <stdlib.h>
 
-void app_bmk_main(void) {
+// Entry routine that is called once all cores are active
+static void app_bmk_main(void) {
 	vmon_monitor_tracepoint(20000);
+
+	main();
+
+	vmon_monitor_endtest(0);
 }
 
 extern unsigned char _end;
@@ -38,13 +43,15 @@ void *_sbrk(unsigned int incr) {
 	return prev_heap_end;
 }
 
+// Routine called by BMK to initialize cores
+// Declare this weak to allow tests to override
 __attribute__((weak))void app_bmk_level0_main(void) {
 	volatile unsigned int *sp;
     unsigned int val = 27;
 
 	// TODO:
 	vmon_monitor_tracepoint(10000);
-	sp = (unsigned int *)malloc(4096);
+	sp = (unsigned int *)malloc(1024*16); // 16k stack should be fine
 
 	sp[0] = 0;
 
@@ -52,11 +59,10 @@ __attribute__((weak))void app_bmk_level0_main(void) {
 
 	vmon_monitor_tracepoint(val);
 
-//	bmk_set_bmk_main_func(&app_bmk_main);
+	bmk_set_bmk_main_func(&app_bmk_main);
 
 	vmon_monitor_tracepoint(11000);
 
-	vmon_monitor_endtest(0);
 }
 
 
