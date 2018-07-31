@@ -1,5 +1,5 @@
 
-// +define+PRINTF_COND=0
++define+PRINTF_COND=0
 
 // Sadly, this seems important
 //+define+RANDOMIZE_REG_INIT
