@@ -49,12 +49,12 @@ class RocketSocCore(
       }));
   implicit val p = core_cfg.toInstance
  
-  // TODO: route interrupts out
   val io = IO(new Bundle {
     val mmio = new AXI4(mmio_p)
     val mem = new AXI4(mem_p)
     val l2_frontend_bus = Flipped(new AXI4(l2_frontend_p))
     val debug = new DebugIOIf()
+    val irq = Input(UInt(4.W))
   })
   
   val rocket_core_lm = LazyModule(new ExampleRocketSystem
@@ -62,7 +62,7 @@ class RocketSocCore(
 //  val rocket_core_lm = LazyModule(new ExampleRocketSystem)
   val rocket_core = Module(rocket_core_lm.module)
  
-  rocket_core.interrupts := 0.asUInt();
+  rocket_core.interrupts := io.irq
  
   val mmio_axi4_p = new AXI4BundleParameters(
     addrBits = 31,

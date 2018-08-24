@@ -10,6 +10,7 @@ package rocket_soc_subsys_tests_pkg;
 	import googletest_uvm_pkg::*;
 	import vmon_client_pkg::*;
 	import uart_serial_agent_pkg::*;
+	import event_agent_pkg::*;
 	
 	`include "rocket_soc_subsys_test_base.svh"
     `include "rocket_soc_subsys_smoke_test.svh"

@@ -75,6 +75,17 @@ module RocketBFM (
 		.rsp_typ        (io_dmem_resp_bits_typ		), 
 		.rsp_data       (io_dmem_resp_bits_data		));
 	
+	// TODO: connect up interrupts
+
+	wire[0:0]		ev;
+	assign ev[0] = io_interrupts_meip;
+	
+	event_bfm #(
+		.WIDTH  (1 )
+		) u_irq_bfm (
+		.clk    (clock   ), 
+		.rst    (reset   ), 
+		.ev     (ev    ));
 
 endmodule
 

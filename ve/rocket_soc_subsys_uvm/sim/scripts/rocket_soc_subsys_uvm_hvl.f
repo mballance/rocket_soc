@@ -9,6 +9,12 @@
 ${SV_BFMS}/hella_cache_master/hella_cache_master_api_pkg.sv
 ${SV_BFMS}/hella_cache_master/uvm/hella_cache_master_agent_pkg.sv
 
+${SV_BFMS}/event/event_api_pkg.sv
+-f ${SV_BFMS}/event/uvm/uvm.f
+
+-f ${VMON}/src/client/sv/vmon_sv_client_hvl.f
+-f ${VMON}/src/client/sv/vmon_sv_client_uvm.f
+
 ${GOOGLETEST_UVM}/src/googletest_uvm_pkg.sv
 
 -f ${ROCKET_SOC}/ve/rocket_soc_uvm/sim/scripts/rocket_soc_uvm_hvl.f

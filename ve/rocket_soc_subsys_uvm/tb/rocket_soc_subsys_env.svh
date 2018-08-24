@@ -10,9 +10,16 @@ class rocket_soc_subsys_env extends uvm_env;
 		hella_cache_master_agent_t;
 	
 	hella_cache_master_agent_t			m_core0;
+	event_agent							m_core0_irq;
 	hella_cache_master_agent_t			m_core1;
+	event_agent							m_core1_irq;
 	hella_cache_master_agent_t			m_core2;
+	event_agent							m_core2_irq;
 	hella_cache_master_agent_t			m_core3;
+	event_agent							m_core3_irq;
+	
+	vmon_client_agent					m_vmon_agent;
+	vmon_m2h_if							m_m2h;
 	uart_serial_agent					uart0;
 
 	function new(string name, uvm_component parent=null);
@@ -25,14 +32,26 @@ class rocket_soc_subsys_env extends uvm_env;
 	 * Override from class uvm_component
 	 */
 	virtual function void build_phase(input uvm_phase phase);
+		typedef virtual wb_vmon_monitor_if #(32,32) wb_vmon_monitor_if_t;
+		wb_vmon_monitor_if_t vmon_if;
 		super.build_phase(phase);
 	
 		m_core0 = hella_cache_master_agent_t::type_id::create("m_core0", this);
+		m_core0_irq = event_agent::type_id::create("m_core0_irq", this);
 		m_core1 = hella_cache_master_agent_t::type_id::create("m_core1", this);
+		m_core1_irq = event_agent::type_id::create("m_core1_irq", this);
 		m_core2 = hella_cache_master_agent_t::type_id::create("m_core2", this);
+		m_core2_irq = event_agent::type_id::create("m_core2_irq", this);
 		m_core3 = hella_cache_master_agent_t::type_id::create("m_core3", this);
+		m_core3_irq = event_agent::type_id::create("m_core3_irq", this);
+		
+		m_vmon_agent = vmon_client_agent::type_id::create("m_vmon_agent", this);
+		m_m2h = new();
 		
 		uart0 = uart_serial_agent::type_id::create("uart0", this);
+		
+		uvm_config_db #(wb_vmon_monitor_if_t)::get(this, "*", "vmon_if", vmon_if);
+		vmon_if.api = m_m2h;
 	endfunction
 
 	/**
@@ -42,6 +61,7 @@ class rocket_soc_subsys_env extends uvm_env;
 	 */
 	virtual function void connect_phase(input uvm_phase phase);
 		super.connect_phase(phase);
+		m_vmon_agent.m_client.add_m2h_if(m_m2h);
 	endfunction
 	
 	

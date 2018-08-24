@@ -6,9 +6,10 @@
  */
 
 #include "rocket_soc_uex_devtree.h"
+
+#include "../../../oc_wb_ip/rtl/wb_uart/fw/wb_uart_dev.h"
 #include "rocket_soc_memmap.h"
 #include "uex_dev_services.h"
-#include "wb_uart_uex_drv.h"
 
 static uex_devtree_t root_devtree = {
 		.name = "dev",

@@ -7,10 +7,10 @@
 
 #ifndef SW_BOOTROM_ROCKET_SOC_UEX_DEVTREE_H_
 #define SW_BOOTROM_ROCKET_SOC_UEX_DEVTREE_H_
+#include "../../../oc_wb_ip/rtl/wb_uart/fw/wb_uart_dev.h"
 #include "uex.h"
 // #include "wb_dma_uex_drv.h"
 // #include "simple_pic_drv.h"
-#include "wb_uart_uex_drv.h"
 // #include "fpio_uex_drv.h"
 
 #ifdef __cplusplus

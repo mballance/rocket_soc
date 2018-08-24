@@ -12,12 +12,12 @@ import freechips.rocketchip.amba.axi4._
 
 import amba_sys_ip.axi4.Axi4WishboneBridge
 import amba_sys_ip.axi4.Axi4Sram
-import vmon.WishboneVmonMonitor
+import oc_wb_ip.wb_periph_subsys.WishbonePeriphSubsys
 
 class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   
   val io = IO(new Bundle {
-    val uart0 = new UartIf
+    val uart0 = new TxRxIf
   });
  
   val u_core = Module(new RocketSocCore(soc_p.ncores, soc_p.romfile))
@@ -35,12 +35,6 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
       INIT_FILE = "ram.hex")))
   sram.io.s <> u_core.io.mem
 
-//  val mmio_sram = Module(new Axi4Sram(new Axi4Sram.Parameters(
-//      MEM_ADDR_BITS = 12,
-//      u_core.mmio_p)))
-//  mmio_sram.io.s <> u_core.io.mmio
-//  u_core.io.mmio.tieoff()
-      
   val mmio_axi4_wb_bridge = Module(new Axi4WishboneBridge(
       new Axi4WishboneBridge.Parameters(
           u_core.mmio_p, 
@@ -55,29 +49,33 @@ class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
 
   val periph_ic = Module(new WishboneInterconnect(
       new WishboneInterconnectParameters(
-          N_MASTERS = 1,
+          N_MASTERS = 2,
           N_SLAVES = 2,
           wb_p = new Wishbone.Parameters(32, 32))
       ))
   mmio_axi4_wb_bridge.io.i <> mmio_width_converter.io.i
   mmio_width_converter.io.o <> periph_ic.io.m(0)
- 
 
-  // UART
-  val u_uart =  Module(new WishboneUART())
+  val irq = Wire(UInt(4.W))
+
+  // Peripheral Subsystem
+  val u_periph_subsys = Module(new WishbonePeriphSubsys(new Wishbone.Parameters(32,32)))
   periph_ic.io.addr_base(0)  := 0x60000000.asUInt()
   periph_ic.io.addr_limit(0) := 0x60000fff.asUInt()
-  u_uart.io.t <> periph_ic.io.s(0)
-  io.uart0 <> u_uart.io.s
+  u_periph_subsys.io.s <> periph_ic.io.s(0)
+  u_periph_subsys.io.m <> periph_ic.io.m(1)
+  io.uart0 <> u_periph_subsys.io.uart0
+  
+  irq := u_periph_subsys.io.irq
+// TODO:
+  u_core.io.irq := irq
+ // <> u_periph_subsys.io.irq
  
   // Dummy target for use by the trickbox
   val u_sp = Module(new WishboneDummySlave())
   periph_ic.io.addr_base(1) := 0x60001000.asUInt()
   periph_ic.io.addr_limit(1) := 0x60001fff.asUInt()
   u_sp.io.s <> periph_ic.io.s(1)
-  
-//  val u_vmon_monitor = Module(new WishboneVmonMonitor(new Wishbone.Parameters(32,32)))
-//  u_vmon_monitor.io.m := u_sp.io.s
   
 }
 

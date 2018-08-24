@@ -15,6 +15,11 @@ class RocketSocTB(val soc_p : RocketSoc.Parameters) extends Module {
   
   // Instantiate and connect a UART agent
   val u_uart_bfm = Module(new UartSerialBFM())
-  u_uart_bfm.io.s <> u_dut.io.uart0
+// TODO: bridge UART to RxTx
+	u_uart_bfm.io.s.TxD := u_dut.io.uart0.TxD
+	u_dut.io.uart0.RxD := u_uart_bfm.io.s.RxD
+	u_uart_bfm.io.s.RTS := Bool(false)
+	u_uart_bfm.io.s.DTR := Bool(false)
+//  u_uart_bfm.io.s <> u_dut.io.uart0
   
 }

@@ -9,7 +9,15 @@ ${BUILD_DIR_A}/AsyncResetReg.v
 
 -f ${BUILD_DIR_A}/RocketSocTB/RocketSocTB.f
 
+-f ${WB_SYS_IP}/rtl/adapters/adapters.f
+${WB_SYS_IP}/rtl/interconnects/wb_interconnect_2x1.sv
+${WB_SYS_IP}/rtl/interconnects/wb_interconnect_1x3.sv
+${WB_SYS_IP}/rtl/interconnects/wb_interconnect_NxN.sv
+
 -f ${OC_WB_IP}/rtl/wb_uart/rtl.f
+-f ${OC_WB_IP}/rtl/wb_dma/rtl/verilog/rtl.f
+-f ${OC_WB_IP}/rtl/wb_periph_subsys/wb_periph_subsys.f
+-f ${OC_WB_IP}/rtl/simple_pic/rtl/rtl.f
 
 ${AMBA_SYS_IP}/rtl/axi4/axi4_sram/axi4_sram.sv
 ${AMBA_SYS_IP}/rtl/axi4/axi4_sram_bridges/axi4_generic_byte_en_sram_bridge.sv
