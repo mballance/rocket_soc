@@ -19,15 +19,12 @@ class rocket_soc_subsys_uex_test
 			forever begin
 				m_irq_mb.get(ev);
 				if (ev != 0) begin
-					$display("IRQ: --> deliver %0d", ev);
 					m_test.m_sys.uex_irq(0, ev);
-					$display("IRQ: <-- deliver %0d", ev);
 				end
 			end
 		endtask
 		
 		function void write(event_seq_item t);
-			$display("IRQ: %0d", t.m_value);
 			void'(m_irq_mb.try_put(t.m_value));
 		endfunction
 		

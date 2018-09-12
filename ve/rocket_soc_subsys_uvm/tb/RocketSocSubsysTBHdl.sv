@@ -35,14 +35,14 @@ module RocketSocSubsysTBHdl;
 	
 	RocketSocTB tb(.clock(clock), .reset(reset));	
 	
-	wire [31:0]     ADR = tb.u_dut.periph_ic.io_m_0_req_ADR;
-	wire [31:0]     DAT_W = tb.u_dut.periph_ic.io_m_0_req_DAT_W;
-	wire            CYC = tb.u_dut.periph_ic.io_m_0_req_CYC;
+	wire [31:0]     ADR = tb.u_dut.u_wb_ic.io_m_1_req_ADR;
+	wire [31:0]     DAT_W = tb.u_dut.u_wb_ic.io_m_1_req_DAT_W;
+	wire            CYC = tb.u_dut.u_wb_ic.io_m_1_req_CYC;
 	wire            ERR = 0; // tb.u_dut.periph_ic.io_m_0_req_ERR;
-	wire [3:0]      SEL = tb.u_dut.periph_ic.io_m_0_req_SEL;
-	wire            ACK = tb.u_dut.periph_ic.io_m_0_rsp_ACK;
-	wire            WE = tb.u_dut.periph_ic.io_m_0_req_WE;
-	wire            STB = tb.u_dut.periph_ic.io_m_0_req_STB;
+	wire [3:0]      SEL = tb.u_dut.u_wb_ic.io_m_1_req_SEL;
+	wire            ACK = tb.u_dut.u_wb_ic.io_m_1_rsp_ACK;
+	wire            WE = tb.u_dut.u_wb_ic.io_m_1_req_WE;
+	wire            STB = tb.u_dut.u_wb_ic.io_m_1_req_STB;
 
 	wb_vmon_monitor #(
 			.WB_ADDR_WIDTH(32),

@@ -15,8 +15,10 @@ extern "C" {
 #endif
 
 typedef enum {
+	uart_agent,
 	WB_PERIPH_SUBSYS_DEVID(periph_subsys),
-	plic
+	plic,
+	sys_dma
 } rocket_soc_devid_e;
 
 void rocket_soc_startup(void);

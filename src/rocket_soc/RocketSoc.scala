@@ -13,73 +13,138 @@ import freechips.rocketchip.amba.axi4._
 import amba_sys_ip.axi4.Axi4WishboneBridge
 import amba_sys_ip.axi4.Axi4Sram
 import oc_wb_ip.wb_periph_subsys.WishbonePeriphSubsys
+import amba_sys_ip.axi4.AXI4_IC
+import oc_wb_ip.wb_dma.WishboneDMA
+import chisel3.util.Cat
 
 class RocketSoc(val soc_p : RocketSoc.Parameters) extends Module {
   
   val io = IO(new Bundle {
     val uart0 = new TxRxIf
   });
- 
+  
   val u_core = Module(new RocketSocCore(soc_p.ncores, soc_p.romfile))
- 
- 
+  
   // We're not using the debug interface
   u_core.io.debug.tieoff_flipped(u_core.clock, reset.toBool())
   
   // We're not using the frontend bus either
   u_core.io.l2_frontend_bus.tieoff_flipped()
-
-  val sram = Module(new Axi4Sram(new Axi4Sram.Parameters(
-      MEM_ADDR_BITS = 22,
-      u_core.mem_p,
-      INIT_FILE = "ram.hex")))
-  sram.io.s <> u_core.io.mem
-
-  val mmio_axi4_wb_bridge = Module(new Axi4WishboneBridge(
-      new Axi4WishboneBridge.Parameters(
-          u_core.mmio_p, 
-          new Wishbone.Parameters(31, 64),
-          Bool(true)
-      )))
-  mmio_axi4_wb_bridge.io.t <> u_core.io.mmio
-      
-  val mmio_width_converter = Module(new WishboneWide2Narrow(
-      new Wishbone.Parameters(31, 64),
-      new Wishbone.Parameters(31, 32)))
-
-  val periph_ic = Module(new WishboneInterconnect(
+  
+  val u_wb_ic = Module(new WishboneInterconnect(
       new WishboneInterconnectParameters(
-          N_MASTERS = 2,
-          N_SLAVES = 2,
-          wb_p = new Wishbone.Parameters(32, 32))
-      ))
-  mmio_axi4_wb_bridge.io.i <> mmio_width_converter.io.i
-  mmio_width_converter.io.o <> periph_ic.io.m(0)
+            N_MASTERS=5, 
+            N_SLAVES=4,
+          new Wishbone.Parameters(32, 64))));
+  u_wb_ic.io.addr_base(RocketSoc.S_SRAM_PORT) := 0x00000000.asUInt()
+  u_wb_ic.io.addr_limit(RocketSoc.S_SRAM_PORT) := 0x00FFFFFF.asUInt()
+  
+  u_wb_ic.io.addr_base(RocketSoc.S_PERIPH_SS_PORT) := 0x01000000.asUInt()
+  u_wb_ic.io.addr_limit(RocketSoc.S_PERIPH_SS_PORT) := 0x01000FFF.asUInt()
+  
+  u_wb_ic.io.addr_base(RocketSoc.S_STUB_PORT) := 0x01001000.asUInt()
+  u_wb_ic.io.addr_limit(RocketSoc.S_STUB_PORT) := 0x01001FFF.asUInt()
+  
+  u_wb_ic.io.addr_base(RocketSoc.S_SYS_DMA) := 0x01002000.asUInt()
+  u_wb_ic.io.addr_limit(RocketSoc.S_SYS_DMA) := 0x01002FFF.asUInt()
+  
+  val u_mmio_axi2wb = Module(new Axi4WishboneBridge(
+      new Axi4WishboneBridge.Parameters(
+          new AXI4.Parameters(28, 64),
+          new Wishbone.Parameters(32, 64),
+          Bool(true)
+          )));
+  
+  val u_mem_axi2wb = Module(new Axi4WishboneBridge(
+      new Axi4WishboneBridge.Parameters(
+          new AXI4.Parameters(28, 64),
+          new Wishbone.Parameters(32, 64),
+          Bool(true)
+          )));
+ 
+  u_mem_axi2wb.io.t <> u_core.io.mem
+  u_wb_ic.io.m(RocketSoc.M_MEM_PORT) <> u_mem_axi2wb.io.i
+  
+  u_mmio_axi2wb.io.t <> u_core.io.mmio
+  u_wb_ic.io.m(RocketSoc.M_MMIO_PORT) <> u_mmio_axi2wb.io.i
+  
+  val sram = Module(new WishboneSram(new WishboneSram.Parameters(
+      MEM_ADDR_BITS = 22,
+      new Wishbone.Parameters(32,64),
+      INIT_FILE = "ram.hex")))
+  sram.io.s <> u_wb_ic.io.s(RocketSoc.S_SRAM_PORT)
 
-  val irq = Wire(UInt(4.W))
+  // The peripheral subsystem is connected via a width converter
+  val mmio_width_converter = Module(new WishboneWide2Narrow(
+      new Wishbone.Parameters(32, 64),
+      new Wishbone.Parameters(32, 32)))
+
+  // Connect the IC to Periph Subsys width converter
+  u_wb_ic.io.s(RocketSoc.S_PERIPH_SS_PORT) <> mmio_width_converter.io.i
 
   // Peripheral Subsystem
   val u_periph_subsys = Module(new WishbonePeriphSubsys(new Wishbone.Parameters(32,32)))
-  periph_ic.io.addr_base(0)  := 0x60000000.asUInt()
-  periph_ic.io.addr_limit(0) := 0x60000fff.asUInt()
-  u_periph_subsys.io.s <> periph_ic.io.s(0)
-  u_periph_subsys.io.m <> periph_ic.io.m(1)
+  mmio_width_converter.io.o <> u_periph_subsys.io.s
   io.uart0 <> u_periph_subsys.io.uart0
   
-  irq := u_periph_subsys.io.irq
-// TODO:
-  u_core.io.irq := irq
- // <> u_periph_subsys.io.irq
+  // System DMA
+  val u_sys_dma = Module(new WishboneDMA())
+  val u_sys_wc_s = Module(new WishboneWide2Narrow(
+      new Wishbone.Parameters(32, 64),
+      new Wishbone.Parameters(32, 32)))
+  val u_sys_wc_m0 = Module(new Wishbone32To64())
+  val u_sys_wc_m1 = Module(new Wishbone32To64())
+  
+  u_sys_wc_s.io.i <> u_wb_ic.io.s(RocketSoc.S_SYS_DMA)
+  u_sys_dma.io.s <> u_sys_wc_s.io.o
+  u_sys_wc_m0.io.i <> u_sys_dma.io.m0
+  u_sys_wc_m0.io.o <> u_wb_ic.io.m(RocketSoc.M_SYS_DMA_M0)
+  u_sys_wc_m1.io.i <> u_sys_dma.io.m1
+  u_sys_wc_m1.io.o <> u_wb_ic.io.m(RocketSoc.M_SYS_DMA_M1)
+//  u_sys_dma.io.m0.rsp.ACK := Bool(false)
+//  u_sys_dma.io.m0.rsp.ERR := Bool(false)
+//  u_sys_dma.io.m0.rsp.DAT_R := 0.asUInt()
+//  u_sys_dma.io.m0.rsp.TGD_R := 0.asUInt()
+//  
+//  u_sys_dma.io.m1.rsp.ACK := Bool(false)
+//  u_sys_dma.io.m1.rsp.ERR := Bool(false)
+//  u_sys_dma.io.m1.rsp.DAT_R := 0.asUInt()
+//  u_sys_dma.io.m1.rsp.TGD_R := 0.asUInt()
+  
+  // Tie off the handshake signals
+  u_sys_dma.io.dma_req_i := 0.asUInt()
+  u_sys_dma.io.dma_nd_i := 0.asUInt()
+  u_sys_dma.io.dma_rest_i := 0.asUInt()
+      
+ 
+  // Up-size the 32-bit peripheral interconnect interface to 64
+  val periph2ic_width_converter = Module(new Wishbone32To64())
+  periph2ic_width_converter.io.i <> u_periph_subsys.io.m
+  u_wb_ic.io.m(RocketSoc.M_PERIPH_SS_PORT) <> periph2ic_width_converter.io.o
+  
+  u_core.io.irq := Cat(
+      u_sys_dma.io.inta_o,
+      u_periph_subsys.io.irq
+      )
  
   // Dummy target for use by the trickbox
   val u_sp = Module(new WishboneDummySlave())
-  periph_ic.io.addr_base(1) := 0x60001000.asUInt()
-  periph_ic.io.addr_limit(1) := 0x60001fff.asUInt()
-  u_sp.io.s <> periph_ic.io.s(1)
+  u_sp.io.s <> u_wb_ic.io.s(RocketSoc.S_STUB_PORT)
   
 }
 
 object RocketSoc {
+  val M_MEM_PORT = 0
+  val M_MMIO_PORT = 1
+  val M_PERIPH_SS_PORT = 2
+  val M_SYS_DMA_M0 = 3
+  val M_SYS_DMA_M1 = 4
+  
+  val S_PERIPH_SS_PORT = 0
+  val S_STUB_PORT = 1
+  val S_SRAM_PORT = 2
+  val S_SYS_DMA = 3
+  
   class Parameters(
       val romfile : String = "/bootrom/bootrom.img",
       val ncores : Int = 4

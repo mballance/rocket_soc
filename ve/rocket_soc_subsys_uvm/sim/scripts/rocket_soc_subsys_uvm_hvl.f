@@ -14,6 +14,8 @@ ${SV_BFMS}/event/event_api_pkg.sv
 
 -f ${VMON}/src/client/sv/vmon_sv_client_hvl.f
 -f ${VMON}/src/client/sv/vmon_sv_client_uvm.f
+-f ${UVMDEV}/src/uvmdev.f
+${UVMDEV}/src/uvmdev_vmon_pkg.sv
 
 ${GOOGLETEST_UVM}/src/googletest_uvm_pkg.sv
 

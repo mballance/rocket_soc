@@ -17,10 +17,10 @@ include $(PACKAGES_DIR)/uex/uex.mk
 include $(PACKAGES_DIR)/uex/impl/sv/uex_env_sv.mk
 include $(VMON)/src/monitor/vmon_monitor.mk
 
-include $(SV_BFMS)/uart/vmon/csrc/vmon_uart_agent.mk
+include $(SV_BFMS)/uart/vmon/uart_agent_dev.mk
 
 
 DPI_OBJS_LIBS += unit_test.o libuex.o libvmon_monitor.o 
 DPI_OBJS_LIBS += libwb_uart_fw.o libwb_dma_fw.o librocket_soc_uex.o
-DPI_OBJS_LIBS += libwb_simple_pic_fw.o librocket_soc_devs.o libvmon_uart_agent.o
+DPI_OBJS_LIBS += libwb_simple_pic_fw.o librocket_soc_devs.o libuart_agent_dev.o
 

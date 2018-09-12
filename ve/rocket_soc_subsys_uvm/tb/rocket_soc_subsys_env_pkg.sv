@@ -11,6 +11,7 @@ package rocket_soc_subsys_env_pkg;
 	import vmon_client_pkg::*;
 	import vmon_client_uvm_pkg::*;
 	import vmon_client_api_pkg::*;
+	import uvmdev_vmon_pkg::*;
 
 	`include "rocket_soc_subsys_mem_services.svh"
 	`include "rocket_soc_subsys_env.svh"
