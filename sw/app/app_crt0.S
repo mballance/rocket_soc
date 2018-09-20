@@ -8,14 +8,7 @@
 #define MEM_BASE 0x80000000
 #define MMIO_BASE 0x60000000
 
-#define TRACEPOINT(x) \
-  li t0, 0x60001000; \
-  li t1, 0x02a5; \
-  sh t1, 0(t0); \
-  li t1, x; \
-  sll t1, t1, 8; \
-  ori t1, t1, 0x05; \
-  sw t1, 0(t0);
+#define TRACEPOINT(x)
 
 // TODO:
 // - Setup new stack
@@ -40,8 +33,7 @@ addi	s0, sp, 24
 // Initialize the global pointer
 .option push
 .option norelax
-1:auipc	gp, %pcrel_hi(__global_pointer$)
-addi	gp, gp, %pcrel_lo(1b)
+la gp, __global_pointer$
 .option pop
 
 TRACEPOINT(1000)
@@ -53,15 +45,15 @@ TRACEPOINT(1000)
 
 TRACEPOINT(2000)
   /* clear application's BSS */
-  la t0, __bss_start
-  la t1, _end
+  la t1, __bss_start
+  la t2, __bss_end
 
-  bge x26, x27, zero_loop_end
+  bge t1, t2, zero_loop_end
 
 zero_loop:
-  sw zero, 0(t0)
-  addi t0, t0, 4
-  ble t0, t1, zero_loop
+  sw zero, 0(t1)
+  addi t1, t1, 4
+  ble t1, t2, zero_loop
 zero_loop_end:
 
 TRACEPOINT(3000)
@@ -78,10 +70,26 @@ TRACEPOINT(4000)
   nop
   ld		gp, 16(sp)
   ld		ra, 8(sp)
-  ld		s0, 8(sp)
+  ld		s0, 0(sp)
   addi		sp, sp, 24
   ret
   nop
+
+/**
+ * This function exists to properly initialize
+ * the 'gp' before re-entering application C code
+ */
+.globl app_bmk_main_wrapper
+app_bmk_main_wrapper:
+// Initialize the global pointer
+.option push
+.option norelax
+la gp, __global_pointer$
+.option pop
+  jal app_bmk_main
+
+// TODO: will need a wrapper for non-C0 code
+// entering into application space
 
 TRACEPOINT(5000)
 1:

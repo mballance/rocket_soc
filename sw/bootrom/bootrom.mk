@@ -1,12 +1,7 @@
 
 BOOTROM_SRC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-include $(PACKAGES_DIR)/bmk/src/bmk.mk
-include $(PACKAGES_DIR)/bmk/src/impl/atomics/riscv/atomics_riscv.mk
-include $(PACKAGES_DIR)/bmk/src/impl/context/riscv/context_riscv.mk
-include $(PACKAGES_DIR)/bmk/src/impl/scheduler/simple/scheduler_simple.mk
-include $(PACKAGES_DIR)/bmk/src/impl/sys/riscv/sys_riscv.mk
-include $(PACKAGES_DIR)/bmk/src/impl/debug/null/debug_null.mk
+include $(PACKAGES_DIR)/bmk/configs/riscv/bare/bare.mk
 
 ifneq (1,$(RULES))
 

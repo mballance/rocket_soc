@@ -8,7 +8,7 @@ OUTPUT_ARCH(riscv)
 MEMORY
 {
 	/* 8m */
-	ram(rwx) : ORIGIN = 0x40001000, LENGTH = 0x01000000
+	ram(rwx) : ORIGIN = 0x40002000, LENGTH = 0x01000000
 }
 ENTRY(_app_entry)
 SECTIONS
@@ -118,7 +118,7 @@ SECTIONS
   .data.rel.ro : { *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*) *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*) }
   .dynamic        : { *(.dynamic) }
   . = DATA_SEGMENT_RELRO_END (0, .);
-  .data           :
+  .data ALIGN(0x10)     :
   {
     *(.data .data.* .gnu.linkonce.d.*)
     SORT(CONSTRUCTORS)
@@ -159,6 +159,7 @@ SECTIONS
   . = SEGMENT_START("ldata-segment", .);
   . = ALIGN(32 / 8);
   _end = .; PROVIDE (end = .);
+  __bss_end = .;
   . = DATA_SEGMENT_END (.);
   /* Stabs debugging sections.  */
   .stab          0 : { *(.stab) }

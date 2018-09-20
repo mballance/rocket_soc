@@ -3,8 +3,8 @@ SW_APP_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 ifneq (1,$(RULES))
 
-LIBGCC=$(shell $(CC) -print-libgcc-file-name)
-LIBC=$(shell $(CC) -print-file-name=libc.a)
+LIBGCC=$(shell $(CC) -march=rv64imafd -print-libgcc-file-name)
+LIBC=$(shell $(CC) -march=rv64imafd -print-file-name=libc.a)
 #LIBCXX:=$(dir $(LIBGCC))/../../../../../or1k-elf/lib/compat-delay/libstdc++.a
 #LIBOR1K:=$(dir $(LIBGCC))/../../../../../or1k-elf/lib/compat-delay/libor1k.a
 

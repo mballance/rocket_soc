@@ -68,6 +68,7 @@ SECTIONS
         *(.data .data.* .gnu.linkonce.d.*)
         . = ALIGN(4);
         _edata = .;
+        _memory_end = .;
     } >ram AT>rom
 
     .bss ALIGN(0x4): {
