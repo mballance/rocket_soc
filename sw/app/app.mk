@@ -13,9 +13,9 @@ SRC_DIRS += $(SW_APP_DIR)
 
 else # Rules
 
-app/libapp.o : app/app_crt0.o app/app_startup.o
+app/libapp.o : app/app_crt0.o app/app_startup.o app/rocket_soc_app.o
 	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi
-	$(Q)$(LD) -r -o $@ app/app_crt0.o app/app_startup.o
+	$(Q)$(LD) -r -o $@ app/app_crt0.o app/app_startup.o app/rocket_soc_app.o
 
 app/%.o : %.c
 	$(Q)if test ! -d `dirname $@`; then mkdir -p `dirname $@`; fi

@@ -6,6 +6,7 @@
  */
 #include "bmk.h"
 #include "vmon_monitor.h"
+#include "rocket_soc_app.h"
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -13,7 +14,11 @@ void app_bmk_main_wrapper(void);
 
 // Entry routine that is called once all cores are active
 void app_bmk_main(void) {
+	rocket_soc_app_pre_main();
+
 	main();
+
+	rocket_soc_app_post_main();
 
 	vmon_monitor_endtest(0);
 }
@@ -47,7 +52,7 @@ void *_sbrk(unsigned int incr) {
 // Routine called by BMK to initialize cores
 // Declare this weak to allow tests to override
 __attribute__((weak))void app_bmk_level0_main(void) {
-	volatile unsigned int *sp = 0;
+	unsigned int *sp = 0;
 
 	vmon_monitor_msg("Level0_main");
 //	bmk_info_low("Level0_main");
@@ -56,6 +61,9 @@ __attribute__((weak))void app_bmk_level0_main(void) {
 	// Probably should
 	sp = (unsigned int *)malloc(1024*16); // 16k stack should be fine
 	bmk_init_core(0, sp, 1024*16);
+
+	// Call the initialization hook
+	rocket_soc_app_init();
 
 	bmk_set_bmk_main_func(&app_bmk_main_wrapper);
 }
