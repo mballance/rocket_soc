@@ -3,7 +3,7 @@
  */
 #include <stdint.h>
 #include "vmon_monitor.h"
-#include "bmk_sys_services.h"
+#include "bmk.h"
 //#include "wb_uart_regs.h"
 //#include "rocket_soc_memmap.h"
 
